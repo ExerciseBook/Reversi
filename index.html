@@ -1,0 +1,29 @@
+<html>
+    <meta charset="utf-8">
+    <head>
+        <title>黑白棋 🤔</title>
+        <script src="js/Core/Core.js"></script>
+
+        <script src="js/Core/Event/Event.js"></script>
+        <script src="js/Core/Event/GameCoreReverseEvent.js"></script>
+        <script src="js/Core/Event/GameEndEvent.js"></script>
+        <script src="js/Core/Event/GameStartEvent.js"></script>
+        <script src="js/Core/Event/GameRoundEvent.js"></script>
+
+
+        <script src="js/Core/Player.js"></script>
+        <script src="js/Core/Display.js"></script>
+
+        <script src="js/Game/GameDisplay.js"></script>
+        <script src="js/Game/Players/HumanPlayer.js"></script>
+    </head>
+    <body>
+            <script>
+                a = new Core();
+                PlayerA = new HumanPlayer();
+                PlayerB = new Player();
+                ADisplay = new GameDisplay();
+                a.Initialize(PlayerA,PlayerB,ADisplay);
+            </script>
+    </body>
+</html>
