@@ -8,4 +8,15 @@ class GameEndEvent extends Event{
     constructor(){
         super();
     }
+
+    /**
+     * 胜利者
+     */
+    Winner;
+
+    /**
+     * 得分
+     */
+    Scores=[];
+    
 }

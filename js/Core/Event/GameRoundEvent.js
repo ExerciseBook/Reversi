@@ -9,6 +9,9 @@ class GameRoundEvent extends Event{
         super();
     }
 
+    /**
+     * 轮到哪一方下棋
+     */
     Operator;
     
 }

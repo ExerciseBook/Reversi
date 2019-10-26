@@ -78,6 +78,7 @@ class Core{
         this.DisplayControl.GameControl = this;
 
 
+        // 广播棋盘更新事件
         let AGameDisplayCheckerUpdatEvent = new GameDisplayCheckerUpdatEvent();
         AGameDisplayCheckerUpdatEvent.GameControl = this;
         AGameDisplayCheckerUpdatEvent.OldCheckerBoard = this.GetCheckerBoard();
@@ -86,6 +87,25 @@ class Core{
         AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
         
         this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
+
+        // 广播游戏开始事件
+        let AGameStartEvent = new GameStartEvent();
+        AGameStartEvent.GameControl = this;
+        this.DisplayControl.Event_GameStart(AGameStartEvent);
+        this.Players[0].Event_GameStart(AGameStartEvent);
+        this.Players[1].Event_GameStart(AGameStartEvent);
+
+        // 广播游戏回合事件
+        let AGameRoundEvent = new GameRoundEvent();
+        AGameRoundEvent.GameControl = this;
+        if (this.GameStatus==0){
+            AGameRoundEvent.Operator = this.Players[0];
+        } else if (this.GameStatus==1) {
+            AGameRoundEvent.Operator = this.Players[1];
+        } else AGameRoundEvent.Operator = null;
+        this.DisplayControl.Event_Round(AGameRoundEvent);
+        this.Players[0].Event_Round(AGameRoundEvent);
+        this.Players[1].Event_Round(AGameRoundEvent);
     }
     
     /**
@@ -231,6 +251,30 @@ class Core{
         return false;
     }
 
+    /**
+     * 获取得分
+     * 
+     * @return {int[]} 得分
+     */
+    GetScores(){
+        let scores=[0,0];
+
+        let i;
+        let j;
+        // 游戏结束
+        for (i=0;i<8;i++){
+            for (j=0;j<8;j++){
+                if (this.CheckerBoard[i][j]==this.Players[0]){
+                    scores[0]++;
+                } else if (this.CheckerBoard[i][j]==this.Players[1]){
+                    scores[1]++;
+                }
+            }
+        }
+
+        return scores;
+    }
+
 
     /**
      * 更新游戏状态
@@ -238,8 +282,6 @@ class Core{
     UpdateGameStatus(){
         if ( (this.GameStatus!=0) && (this.GameStatus!=1) )  return this.GameStatus;
 
-        let i;
-        let j;
         let score=[0,0]
 
         let NextStatus = 1-this.GameStatus;
@@ -254,16 +296,7 @@ class Core{
             return this.GameStatus;
         }
 
-        // 游戏结束
-        for (i=0;i<8;i++){
-            for (j=0;j<8;j++){
-                if (this.CheckerBoard[i][j]==Players[0]){
-                    score[0]++;
-                } else if (this.CheckerBoard[i][j]==Players[1]){
-                    score[1]++;
-                }
-            }
-        }
+        score = this.GetScores();
 
         if (score[0]>score[1]) {
             this.GameStatus = 9;
@@ -297,6 +330,8 @@ class Core{
                 return -2;
             };
             
+
+            // 广播棋盘更新事件
             let AGameDisplayCheckerUpdatEvent = new GameDisplayCheckerUpdatEvent();
             AGameDisplayCheckerUpdatEvent.GameControl = this;
             AGameDisplayCheckerUpdatEvent.OldCheckerBoard = this.GetCheckerBoard();
@@ -309,9 +344,42 @@ class Core{
             AGameDisplayCheckerUpdatEvent.NewCheckerBoard = this.GetCheckerBoard();
             AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
 
-
             this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
 
+
+            if ( (this.GameStatus==0) || (this.GameStatus==1) ) {
+                // 游戏尚未结束
+                // 广播游戏回合事件
+                let AGameRoundEvent = new GameRoundEvent();
+                AGameRoundEvent.GameControl = this;
+                if (this.GameStatus==0){
+                    AGameRoundEvent.Operator = this.Players[0];
+                } else if (this.GameStatus==1) {
+                    AGameRoundEvent.Operator = this.Players[1];
+                } else AGameRoundEvent.Operator = null;
+                this.DisplayControl.Event_Round(AGameRoundEvent);
+                this.Players[0].Event_Round(AGameRoundEvent);
+                this.Players[1].Event_Round(AGameRoundEvent);
+            } else if ( (this.GameStatus==8) || (this.GameStatus==9) || (this.GameStatus==10) ) {
+                // 游戏结束
+                let AGameEndEvent = new GameEndEvent();
+                AGameEndEvent.GameControl = this;
+                if ( this.GameStatus==8 ) {
+                    AGameEndEvent.Winner = this;
+                } if ( this.GameStatus==9 ) {
+                    AGameEndEvent.Winner = this.Players[0];
+                } if ( this.GameStatus==10 ) {
+                    AGameEndEvent.Winner = this.Players[1];
+                } else {
+                    throw new Error("WDNMD.");
+                };
+                AGameEndEvent.Scores=this.GetScores;
+                this.DisplayControl.Event_GameEnd(AGameEndEvent);
+                this.Players[0].Event_GameEnd(AGameEndEvent);
+                this.Players[1].Event_GameEnd(AGameEndEvent);
+            } else {
+                throw new Error("WDNMD.");
+            }
 
             return 0;
 
