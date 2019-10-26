@@ -75,6 +75,8 @@ class Core{
         PlayerB.Identity = 1;
 
         this.DisplayControl = ADisplay;
+        this.DisplayControl.GameControl = this;
+        this.DisplayControl.CheckerBoardUpdate();
     }
     
 
@@ -216,13 +218,13 @@ class Core{
         let score=[0,0]
 
         let NextStatus = 1-this.GameStatus;
-        if (CanPlaceAChess(Players[NextStatus])) {
+        if (this.CanPlaceAChess(this.Players[NextStatus])) {
             this.GameStatus = NextStatus;
             return this.GameStatus;
         }
 
         NextStatus = this.GameStatus;
-        if (CanPlaceAChess(Players[NextStatus])) {
+        if (his.CanPlaceAChess(this.Players[NextStatus])) {
             this.GameStatus = NextStatus;
             return this.GameStatus;
         }

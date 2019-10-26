@@ -25,7 +25,7 @@ class Player{
      * @param {int} y 第二参数
      */
     PlaceChess(x,y){
-        this.GameControl.PlaceChess(this,x,y);
+        return this.GameControl.PlaceChess(this,x,y);
     }
 
     /**
