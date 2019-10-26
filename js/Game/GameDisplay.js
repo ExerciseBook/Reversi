@@ -12,9 +12,10 @@ class GameDisplay extends Display{
         /**
          * 本方法会在棋盘更新时被触发
          */
-        this.CheckerBoardUpdate=function(){
+        this.CheckerBoardUpdate=function(e){
             ///巴拉巴拉
-            
+            console.log(e);
+
             let CheckerBoard = document.getElementById('ELEM_CheckerBoard');
             console.log(CheckerBoard);
 
@@ -26,9 +27,9 @@ class GameDisplay extends Display{
                 for (j=0;j<8;j++) {
                     content=content+"<td bgcolor=\""
                     
-                    if (this.GameControl.CheckerBoard[i][j] == this.GameControl.Players[0]) {
+                    if (e.NewCheckerBoard[i][j] == e.Players[0]) {
                         content=content+"black";
-                    } else if (this.GameControl.CheckerBoard[i][j] == this.GameControl.Players[1]) {
+                    } else if (e.NewCheckerBoard[i][j] == e.Players[1]) {
                         content=content+"white";
                     } else content=content+"blue";
 

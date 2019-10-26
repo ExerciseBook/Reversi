@@ -21,7 +21,7 @@ class Core{
      * 
      * Player CheckerBoard[8][8]
      */
-    CheckerBoard;
+    CheckerBoard=[[],[],[],[],[],[],[],[]];
 
     /**
      * 玩家池
@@ -30,7 +30,7 @@ class Core{
      * 
      * Player[1] 白方玩家
      */
-    Players;
+    Players=[];
 
     /**
      * 构造函数
@@ -76,10 +76,36 @@ class Core{
 
         this.DisplayControl = ADisplay;
         this.DisplayControl.GameControl = this;
-        this.DisplayControl.CheckerBoardUpdate();
+
+
+        let AGameDisplayCheckerUpdatEvent = new GameDisplayCheckerUpdatEvent();
+        AGameDisplayCheckerUpdatEvent.GameControl = this;
+        AGameDisplayCheckerUpdatEvent.OldCheckerBoard = this.GetCheckerBoard();
+        AGameDisplayCheckerUpdatEvent.GameStatus = this.GameStatus;
+        AGameDisplayCheckerUpdatEvent.NewCheckerBoard = this.GetCheckerBoard();
+        AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
+        
+        this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
     }
     
+    /**
+     * 返回当前棋盘
+     */
+    GetCheckerBoard(){
+        let CheckBoard = [];
+        
+        let i=0;
+        let j=0;
+        for (i=0;i<8;i++) {
+            let Row = [];
+            for (j=0;j<8;j++) {
+                Row.push(this.CheckerBoard[i][j]);
+            }
+            CheckBoard.push(Row);
+        }
 
+        return CheckBoard;
+    }
 
     /**
      * 判断这个方向是否会有棋子被翻转
@@ -146,6 +172,8 @@ class Core{
      * @return {boolean} true:落子位置合法 false:落子位置非法
      */
     VerifyPlacing(APlayer,x,y,e){
+        e.GameControl = this;
+        e.Player = APlayer;
 
         if (this.CheckerBoard[x][y]!=null) return false;
         
@@ -194,9 +222,6 @@ class Core{
         for (i=0;i<8;i++){
             for (j=0;j<8;j++){
                 let e = new GameCoreReverseEvent() ;
-                e.GameControl = this;
-                e.Player = APlayer;
-
                 if (this.VerifyPlacing(APlayer,i,j,e)) {
                     return true;
                 }
@@ -268,18 +293,25 @@ class Core{
         if ( ( (this.GameStatus==0) && (APlayer==this.Players[0]) ) || ( (this.GameStatus==1) && (APlayer==this.Players[1]) ) ) {
 
             let ReverseEvent = new GameCoreReverseEvent() ;
-            ReverseEvent.GameControl = this;
-            ReverseEvent.Player = APlayer;
-
             if (!this.VerifyPlacing(APlayer,x,y,ReverseEvent)){
                 return -2;
             };
+            
+            let AGameDisplayCheckerUpdatEvent = new GameDisplayCheckerUpdatEvent();
+            AGameDisplayCheckerUpdatEvent.GameControl = this;
+            AGameDisplayCheckerUpdatEvent.OldCheckerBoard = this.GetCheckerBoard();
 
             this.CheckerBoard[x][y]=APlayer;
             this.UpdateCheckerBoard(ReverseEvent);
             this.UpdateGameStatus();
 
-            this.DisplayControl.CheckerBoardUpdate();
+            AGameDisplayCheckerUpdatEvent.GameStatus = this.GameStatus;
+            AGameDisplayCheckerUpdatEvent.NewCheckerBoard = this.GetCheckerBoard();
+            AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
+
+
+            this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
+
 
             return 0;
 

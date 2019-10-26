@@ -23,6 +23,8 @@ class Player{
      * 
      * @param {int} x 第一参数
      * @param {int} y 第二参数
+     * 
+     * @return {int} 0:正常 -2:落子位置非法 -1:信息非法 -3:游戏状态失效
      */
     PlaceChess(x,y){
         return this.GameControl.PlaceChess(this,x,y);
