@@ -408,18 +408,26 @@ class Core{
         return RenderingCheckerBoard;
     }
     
+    async Event_BroadCast_GameStart_Actice(module,e){
+        module.Event_GameStart(e);
+    }
+
     async Event_BroadCast_GameStart(){
         let AGameStartEvent = new GameStartEvent();
         AGameStartEvent.GameControl = this;
-        this.DisplayControl.Event_GameStart(AGameStartEvent);
+        this.Event_BroadCast_GameStart_Actice(this.DisplayControl,AGameStartEvent);
 
         AGameStartEvent = new GameStartEvent();
         AGameStartEvent.GameControl = this;
-        this.Players[0].Event_GameStart(AGameStartEvent);
+        this.Event_BroadCast_GameStart_Actice(this.Players[0],AGameStartEvent);
 
         AGameStartEvent = new GameStartEvent();
         AGameStartEvent.GameControl = this;
-        this.Players[1].Event_GameStart(AGameStartEvent);
+        this.Event_BroadCast_GameStart_Actice(this.Players[1],AGameStartEvent);
+    }
+
+    async Event_BroadCast_Round_Actice(module,e){
+        module.Event_Round(e);
     }
 
     async Event_BroadCast_Round(){
@@ -434,17 +442,21 @@ class Core{
         let AnotherGameRoundEvent = new GameRoundEvent();
         AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
-        this.DisplayControl.Event_Round(AnotherGameRoundEvent);
+        this.Event_BroadCast_Round_Actice(this.DisplayControl,AnotherGameRoundEvent);
 
         AnotherGameRoundEvent = new GameRoundEvent();
         AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
-        this.Players[0].Event_Round(AnotherGameRoundEvent);
+        this.Event_BroadCast_Round_Actice(this.Players[0],AnotherGameRoundEvent);
 
         AnotherGameRoundEvent = new GameRoundEvent();
         AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
-        this.Players[1].Event_Round(AnotherGameRoundEvent);
+        this.Event_BroadCast_Round_Actice(this.Players[1],AnotherGameRoundEvent);
+    }
+
+    async Event_BroadCast_GameEnd_Actice(module,e){
+        module.Event_GameEnd(e);
     }
 
     async Event_BroadCast_GameEnd(){
@@ -465,18 +477,18 @@ class Core{
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        this.DisplayControl.Event_GameEnd(AGameEndEvent);
+        this.Event_BroadCast_GameEnd_Actice(this.DisplayControl,AnotherEndEvent);
 
         AnotherEndEvent = new notherEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        this.Players[0].Event_GameEnd(AGameEndEvent);
+        this.Event_BroadCast_GameEnd_Actice(this.Players[0],AnotherEndEvent);
 
         AnotherEndEvent = new notherEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        this.Players[1].Event_GameEnd(AGameEndEvent);
+        this.Event_BroadCast_GameEnd_Actice(this.Players[1],AnotherEndEvent);
     }
 }
