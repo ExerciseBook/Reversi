@@ -84,6 +84,7 @@ class Core{
         AGameDisplayCheckerUpdatEvent.OldCheckerBoard = this.GetCheckerBoard();
         AGameDisplayCheckerUpdatEvent.GameStatus = this.GameStatus;
         AGameDisplayCheckerUpdatEvent.NewCheckerBoard = this.GetCheckerBoard();
+        AGameDisplayCheckerUpdatEvent.NewRenderingCheckerBoard = this.GetRenderingCheckerBoard();
         AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
         
         this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
