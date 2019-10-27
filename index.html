@@ -20,15 +20,47 @@
     </head>
     <body>
         
-            <table id="ELEM_CheckerBoard"/>
-            <div id="ELEM_Sign"/>
+            <div id="ELEM_Sign"></div>
+            <table id="ELEM_CheckerBoard"></table>
+            
+
+            <p>
+                行：<input id="ELEM_input_X"/>
+                列：<input id="ELEM_input_Y"/>
+                <input type="button" value="下棋" onClick="PlaceAChess()"/>
+            </p>
+            <div id="ELEM_input_Sign"></div>
 
             <script>
-                a = new Core();
+                GameControl = new Core();
                 PlayerA = new HumanPlayer();
                 PlayerB = new Player();
                 ADisplay = new GameDisplay();
-                a.Initialize(PlayerA,PlayerB,ADisplay);
+                GameControl.Initialize(PlayerA,PlayerB,ADisplay);
+
+
+                function PlaceAChess(){
+                    let Input_X = document.getElementById('ELEM_input_X');
+                    let Input_Y = document.getElementById('ELEM_input_Y');
+
+                    let APlayer;
+
+                    if (GameControl.GameStatus == 0) {
+                        APlayer = GameControl.Players[0];
+                    } else if (GameControl.GameStatus == 1) {
+                        APlayer = GameControl.Players[1];
+                    }
+
+                    if (APlayer.PlaceChess(Number(Input_X.value),Number(Input_Y.value))==0) {
+                        Input_X.value ="";
+                        Input_Y.value ="";
+                        document.getElementById('ELEM_input_Sign').innerHTML="落子成功！";
+                    } else {
+                        document.getElementById('ELEM_input_Sign').innerHTML="落子失败！";
+                    };
+
+
+                }
             </script>
 
 
