@@ -90,23 +90,11 @@ class Core{
         this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
 
         // 广播游戏开始事件
-        let AGameStartEvent = new GameStartEvent();
-        AGameStartEvent.GameControl = this;
-        this.DisplayControl.Event_GameStart(AGameStartEvent);
-        this.Players[0].Event_GameStart(AGameStartEvent);
-        this.Players[1].Event_GameStart(AGameStartEvent);
+        this.Event_BroadCast_GameStart();
 
         // 广播游戏回合事件
-        let AGameRoundEvent = new GameRoundEvent();
-        AGameRoundEvent.GameControl = this;
-        if (this.GameStatus==0){
-            AGameRoundEvent.Operator = this.Players[0];
-        } else if (this.GameStatus==1) {
-            AGameRoundEvent.Operator = this.Players[1];
-        } else AGameRoundEvent.Operator = null;
-        this.DisplayControl.Event_Round(AGameRoundEvent);
-        this.Players[0].Event_Round(AGameRoundEvent);
-        this.Players[1].Event_Round(AGameRoundEvent);
+        this.Event_BroadCast_Round();
+
     }
     
     /**
@@ -352,33 +340,11 @@ class Core{
             if ( (this.GameStatus==0) || (this.GameStatus==1) ) {
                 // 游戏尚未结束
                 // 广播游戏回合事件
-                let AGameRoundEvent = new GameRoundEvent();
-                AGameRoundEvent.GameControl = this;
-                if (this.GameStatus==0){
-                    AGameRoundEvent.Operator = this.Players[0];
-                } else if (this.GameStatus==1) {
-                    AGameRoundEvent.Operator = this.Players[1];
-                } else AGameRoundEvent.Operator = null;
-                this.DisplayControl.Event_Round(AGameRoundEvent);
-                this.Players[0].Event_Round(AGameRoundEvent);
-                this.Players[1].Event_Round(AGameRoundEvent);
+                this.Event_BroadCast_Round();
             } else if ( (this.GameStatus==8) || (this.GameStatus==9) || (this.GameStatus==10) ) {
                 // 游戏结束
-                let AGameEndEvent = new GameEndEvent();
-                AGameEndEvent.GameControl = this;
-                if ( this.GameStatus==8 ) {
-                    AGameEndEvent.Winner = this;
-                } if ( this.GameStatus==9 ) {
-                    AGameEndEvent.Winner = this.Players[0];
-                } if ( this.GameStatus==10 ) {
-                    AGameEndEvent.Winner = this.Players[1];
-                } else {
-                    throw new Error("WDNMD.");
-                };
-                AGameEndEvent.Scores=this.GetScores;
-                this.DisplayControl.Event_GameEnd(AGameEndEvent);
-                this.Players[0].Event_GameEnd(AGameEndEvent);
-                this.Players[1].Event_GameEnd(AGameEndEvent);
+                // 广播游戏结束事件
+                this.Event_BroadCast_GameEnd();
             } else {
                 throw new Error("WDNMD.");
             }
@@ -442,4 +408,75 @@ class Core{
         return RenderingCheckerBoard;
     }
     
+    async Event_BroadCast_GameStart(){
+        let AGameStartEvent = new GameStartEvent();
+        AGameStartEvent.GameControl = this;
+        this.DisplayControl.Event_GameStart(AGameStartEvent);
+
+        AGameStartEvent = new GameStartEvent();
+        AGameStartEvent.GameControl = this;
+        this.Players[0].Event_GameStart(AGameStartEvent);
+
+        AGameStartEvent = new GameStartEvent();
+        AGameStartEvent.GameControl = this;
+        this.Players[1].Event_GameStart(AGameStartEvent);
+    }
+
+    async Event_BroadCast_Round(){
+        let AGameRoundEvent = new GameRoundEvent();
+        AGameRoundEvent.GameControl = this;
+        if (this.GameStatus==0){
+            AGameRoundEvent.Operator = this.Players[0];
+        } else if (this.GameStatus==1) {
+            AGameRoundEvent.Operator = this.Players[1];
+        } else AGameRoundEvent.Operator = null;
+
+        let AnotherGameRoundEvent = new GameRoundEvent();
+        AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
+        this.DisplayControl.Event_Round(AnotherGameRoundEvent);
+
+        AnotherGameRoundEvent = new GameRoundEvent();
+        AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
+        this.Players[0].Event_Round(AnotherGameRoundEvent);
+
+        AnotherGameRoundEvent = new GameRoundEvent();
+        AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
+        this.Players[1].Event_Round(AnotherGameRoundEvent);
+    }
+
+    async Event_BroadCast_GameEnd(){
+        let AGameEndEvent = new GameEndEvent();
+        AGameEndEvent.GameControl = this;
+        if ( this.GameStatus==8 ) {
+            AGameEndEvent.Winner = this;
+        } if ( this.GameStatus==9 ) {
+            AGameEndEvent.Winner = this.Players[0];
+        } if ( this.GameStatus==10 ) {
+            AGameEndEvent.Winner = this.Players[1];
+        } else {
+            throw new Error("WDNMD.");
+        };
+        AGameEndEvent.Scores=this.GetScores;
+
+        let AnotherEndEvent = new notherEndEvent();
+        AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent.Winner = AGameEndEvent.Winner;
+        AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        this.DisplayControl.Event_GameEnd(AGameEndEvent);
+
+        AnotherEndEvent = new notherEndEvent();
+        AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent.Winner = AGameEndEvent.Winner;
+        AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        this.Players[0].Event_GameEnd(AGameEndEvent);
+
+        AnotherEndEvent = new notherEndEvent();
+        AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent.Winner = AGameEndEvent.Winner;
+        AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        this.Players[1].Event_GameEnd(AGameEndEvent);
+    }
 }
