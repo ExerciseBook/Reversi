@@ -34,7 +34,7 @@
             <script>
                 GameControl = new Core();
                 PlayerA = new HumanPlayer();
-                PlayerB = new Player();
+                PlayerB = new HumanPlayer();
                 ADisplay = new GameDisplay();
                 GameControl.Initialize(PlayerA,PlayerB,ADisplay);
 
@@ -43,8 +43,8 @@
                     let Input_X = document.getElementById('ELEM_input_X');
                     let Input_Y = document.getElementById('ELEM_input_Y');
 
+                    /// 判断轮到谁下棋
                     let APlayer;
-
                     if (GameControl.GameStatus == 0) {
                         APlayer = GameControl.Players[0];
                     } else if (GameControl.GameStatus == 1) {
@@ -52,10 +52,12 @@
                     }
 
                     if (APlayer.PlaceChess(Number(Input_X.value),Number(Input_Y.value))==0) {
+                        /// 下棋成功
                         Input_X.value ="";
                         Input_Y.value ="";
                         document.getElementById('ELEM_input_Sign').innerHTML="落子成功！";
                     } else {
+                        /// 下棋失败
                         document.getElementById('ELEM_input_Sign').innerHTML="落子失败！";
                     };
 

@@ -14,7 +14,6 @@ class GameDisplay extends Display{
      * 本方法会在棋盘更新时被触发
      */
     CheckerBoardUpdate(e){
-        ///巴拉巴拉
         console.log(e);
 
         let CheckerBoard = document.getElementById('ELEM_CheckerBoard');
@@ -53,6 +52,7 @@ class GameDisplay extends Display{
      */
     Event_GameStart(e){
         console.log(e);
+
         let Sign = document.getElementById('ELEM_Sign');
         Sign.innerHTML="游戏开始";
     }
@@ -68,6 +68,7 @@ class GameDisplay extends Display{
      */
     Event_Round(e){
         console.log(e);
+
         let Sign = document.getElementById('ELEM_Sign');
         let s = "";
 
@@ -91,6 +92,7 @@ class GameDisplay extends Display{
      */
     Event_GameEnd(e){
         console.log(e);
+        
         let Sign = document.getElementById('ELEM_Sign');
 
         // e.Winner.Scores[] // 得分

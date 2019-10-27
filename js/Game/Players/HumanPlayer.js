@@ -33,7 +33,6 @@ class HumanPlayer extends Player{
      * @param {Event} e 
      */
     Event_Round(e){
-        
         console.log(this.Identity,e);
 
         if (e.Operator==this) {
