@@ -342,6 +342,7 @@ class Core{
 
             AGameDisplayCheckerUpdatEvent.GameStatus = this.GameStatus;
             AGameDisplayCheckerUpdatEvent.NewCheckerBoard = this.GetCheckerBoard();
+            AGameDisplayCheckerUpdatEvent.NewRenderingCheckerBoard = this.GetRenderingCheckerBoard();
             AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
 
             this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
@@ -391,5 +392,53 @@ class Core{
 
     }
 
+    /**
+     * 获取数字版棋盘
+     * 
+     * 0 黑棋
+     * 
+     * 1 白棋
+     * 
+     * 2 黑方可落子点
+     * 
+     * 3 白方可落子点
+     * 
+     * -1 空白点
+     * 
+     * @return {int[][]} 棋盘
+     */
+    GetRenderingCheckerBoard(){
+        let CheckerBoard=this.GetCheckerBoard();
+        let Players=this.Players;
+
+        let RenderingCheckerBoard=[];
+
+        let i;
+        let j;
+        for (i=0;i<8;i++) {
+            let Row=[];
+            for (j=0;j<8;j++){
+                if (CheckerBoard[i][j]==Players[0]) {
+                    Row.push(0);
+                } else if (CheckerBoard[i][j]==Players[1]) {
+                    Row.push(1);
+                } else if (CheckerBoard[i][j]==null) {
+
+                    let e = new GameCoreReverseEvent() ;
+                    if (this.VerifyPlacing(Players[0],i,j,e)) {
+                        Row.push(2);
+                    } else if (this.VerifyPlacing(Players[1],i,j,e)) {
+                        Row.push(3);
+                    } else Row.push(-1);
+
+                } else {
+                    throw new Error("WDNMD.");
+                }
+            }
+            RenderingCheckerBoard.push(Row);
+        }
+
+        return RenderingCheckerBoard;
+    }
     
 }

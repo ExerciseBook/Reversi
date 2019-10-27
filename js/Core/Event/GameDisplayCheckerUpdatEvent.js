@@ -17,7 +17,22 @@ class GameDisplayCheckerUpdatEvent extends Event{
     /**
      * 更新后的棋盘
      */
-    NewCheckerBoard=[[],[],[],[],[],[],[],[]];;
+    NewCheckerBoard=[[],[],[],[],[],[],[],[]];
+
+    /**
+     * 更新后的棋盘 // 渲染版本
+     * 
+     * 0 黑棋
+     * 
+     * 1 白棋
+     * 
+     * 2 黑方可落子点
+     * 
+     * 3 白方可落子点
+     * 
+     * -1 空白点
+     */
+    NewRenderingCheckerBoard=[[],[],[],[],[],[],[],[]];
 
     /**
      * 玩家池
