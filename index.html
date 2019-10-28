@@ -60,8 +60,23 @@
                         /// 下棋失败
                         document.getElementById('ELEM_input_Sign').innerHTML="落子失败！";
                     };
+                }
 
+                function PlaceAChessWithPosition(X,Y){
+                    let APlayer;
+                    if (GameControl.GameStatus == 0) {
+                        APlayer = GameControl.Players[0];
+                    } else if (GameControl.GameStatus == 1) {
+                        APlayer = GameControl.Players[1];
+                    }
 
+                    if (APlayer.PlaceChess(X,Y)==0) {
+                        /// 下棋成功
+                        document.getElementById('ELEM_input_Sign').innerHTML="落子成功！";
+                    } else {
+                        /// 下棋失败
+                        document.getElementById('ELEM_input_Sign').innerHTML="落子失败！";
+                    };
                 }
             </script>
 

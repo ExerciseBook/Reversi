@@ -23,18 +23,23 @@ class GameDisplay extends Display{
         let i;
         let j;
         for (i=0;i<8;i++) {
+
             content=content+"<tr height=\"20\">";
+
             for (j=0;j<8;j++) {
-                content=content+"<td bgcolor=\""
+
+                content=content+"<td ";
                 
                 if (e.NewCheckerBoard[i][j] == e.Players[0]) {
-                    content=content+"black";
+                    content=content+"bgcolor=\"black\"";
                 } else if (e.NewCheckerBoard[i][j] == e.Players[1]) {
-                    content=content+"white";
-                } else content=content+"blue";
+                    content=content+"bgcolor=\"white\"";
+                } else content=content+"bgcolor=\"blue\" onClick=\"PlaceAChessWithPosition("+i+","+j+")\"";
 
-                content=content+"\" width=\"20\"/>"
+                content=content+" width=\"20\"></td>"
+
             }
+
             content=content+"</tr>";
         }
 
