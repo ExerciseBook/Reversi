@@ -106,7 +106,7 @@ class GameDisplay extends Display{
         if (e.Winner == e.GameControl.Players[0]) {
             //1P 黑方胜
             s=s+"1P 黑方胜";
-        } else if (e.Winner == e.GameControl.Players[2]) {
+        } else if (e.Winner == e.GameControl.Players[1]) {
             //2P 白方胜
             s=s+"2P 白方胜";
         } else if (e.WInner == e.GameControl) {
