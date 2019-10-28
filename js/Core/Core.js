@@ -184,10 +184,29 @@ class Core{
         e.GameControl = this;
         e.Player = APlayer;
 
+        /// 判断欲落子点是否已被占用
         if (this.CheckerBoard[x][y]!=null) return false;
-        
+
         let i=0;
         let j=0;
+        let flag=false;
+        /// 判断是否和棋盘现有棋子相邻
+        for (i=-1;i<=1;i++) {
+            for (j=-1;j<=1;j++) {
+                if ( (i==0) && (j==0) ) continue;
+                if ( (0<=x+i) && (x+i<8) && (0<=y+j) && (y+j<8) ) {
+                    if (this.CheckerBoard[x+i][y+j]!=null) {
+                        flag = true;
+                    }
+                }
+            }
+            if (flag) break;
+        }
+
+        if (flag==false) return false;
+
+        /// 判断落子后是否可以翻转棋盘上已有的棋子
+
         for (i=-1;i<=1;i++) {
             for (j=-1;j<=1;j++) {
                 if ( (i==0) && (j==0) ) continue;
@@ -280,7 +299,7 @@ class Core{
         }
 
         NextStatus = this.GameStatus;
-        if (his.CanPlaceAChess(this.Players[NextStatus])) {
+        if (this.CanPlaceAChess(this.Players[NextStatus])) {
             this.GameStatus = NextStatus;
             return this.GameStatus;
         }
@@ -473,19 +492,19 @@ class Core{
         };
         AGameEndEvent.Scores=this.GetScores;
 
-        let AnotherEndEvent = new notherEndEvent();
+        let AnotherEndEvent = new GameEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         this.Event_BroadCast_GameEnd_Actice(this.DisplayControl,AnotherEndEvent);
 
-        AnotherEndEvent = new notherEndEvent();
+        AnotherEndEvent = new GameEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         this.Event_BroadCast_GameEnd_Actice(this.Players[0],AnotherEndEvent);
 
-        AnotherEndEvent = new notherEndEvent();
+        AnotherEndEvent = new GameEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
