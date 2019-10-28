@@ -43,5 +43,9 @@ class GameDisplayCheckerUpdatEvent extends Event{
      */
     Players=[];
 
+    /**
+     * 得分
+     */
+    Scores=[];
 
 }

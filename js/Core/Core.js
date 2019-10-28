@@ -86,6 +86,7 @@ class Core{
         AGameDisplayCheckerUpdatEvent.NewCheckerBoard = this.GetCheckerBoard();
         AGameDisplayCheckerUpdatEvent.NewRenderingCheckerBoard = this.GetRenderingCheckerBoard();
         AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
+        AGameDisplayCheckerUpdatEvent.Scores = this.GetScores();
         
         this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
 
@@ -352,6 +353,7 @@ class Core{
             AGameDisplayCheckerUpdatEvent.NewCheckerBoard = this.GetCheckerBoard();
             AGameDisplayCheckerUpdatEvent.NewRenderingCheckerBoard = this.GetRenderingCheckerBoard();
             AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
+            AGameDisplayCheckerUpdatEvent.Scores = this.GetScores();
 
             this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
 
@@ -483,31 +485,31 @@ class Core{
         AGameEndEvent.GameControl = this;
         if ( this.GameStatus==8 ) {
             AGameEndEvent.Winner = this;
-        } if ( this.GameStatus==9 ) {
+        } else if ( this.GameStatus==9 ) {
             AGameEndEvent.Winner = this.Players[0];
-        } if ( this.GameStatus==10 ) {
+        } else if ( this.GameStatus==10 ) {
             AGameEndEvent.Winner = this.Players[1];
         } else {
             throw new Error("WDNMD.");
         };
-        AGameEndEvent.Scores=this.GetScores;
+        AGameEndEvent.Scores=this.GetScores();
 
         let AnotherEndEvent = new GameEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
-        AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         this.Event_BroadCast_GameEnd_Actice(this.DisplayControl,AnotherEndEvent);
 
         AnotherEndEvent = new GameEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
-        AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         this.Event_BroadCast_GameEnd_Actice(this.Players[0],AnotherEndEvent);
 
         AnotherEndEvent = new GameEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
-        AnoterEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         this.Event_BroadCast_GameEnd_Actice(this.Players[1],AnotherEndEvent);
     }
 }

@@ -101,7 +101,7 @@ class GameDisplay extends Display{
         let Sign = document.getElementById('ELEM_Sign');
 
         // e.Winner.Scores[] // 得分
-        let s = ""+e.Winner.Scores[0]+":"+e.Winner.Scores[1]+" ";
+        let s = ""+e.Scores[0]+":"+e.Scores[1]+" ";
 
         if (e.Winner == e.GameControl.Players[0]) {
             //1P 黑方胜
