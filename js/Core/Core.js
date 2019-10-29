@@ -387,11 +387,11 @@ class Core{
      * 
      * 1 白棋
      * 
-     * 2 黑方可落子点
+     * &2 == 2 黑方可落子点
      * 
-     * 3 白方可落子点
+     * &4 == 4 白方可落子点
      * 
-     * -1 空白点
+     * &8 == 8 空白点
      * 
      * @return {int[][]} 棋盘
      */
@@ -412,13 +412,16 @@ class Core{
                     Row.push(1);
                 } else if (CheckerBoard[i][j]==null) {
 
-                    let e = new GameCoreReverseEvent() ;
+                    let e = new GameCoreReverseEvent();
+                    let s = 8;
                     if (this.VerifyPlacing(Players[0],i,j,e)) {
-                        Row.push(2);
-                    } else if (this.VerifyPlacing(Players[1],i,j,e)) {
-                        Row.push(3);
-                    } else Row.push(-1);
-
+                        s = (s | 2);
+                    };
+                    e = new GameCoreReverseEvent();
+                    if (this.VerifyPlacing(Players[1],i,j,e)) {
+                        s = (s | 4);
+                    };
+                    Row.push(s);
                 } else {
                     throw new Error("WDNMD.");
                 }

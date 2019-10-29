@@ -14,10 +14,10 @@ class GameDisplay extends Display{
      * 本方法会在棋盘更新时被触发
      */
     CheckerBoardUpdate(e){
-        console.log(e);
+        //console.log(e);
 
         let CheckerBoard = document.getElementById('ELEM_CheckerBoard');
-        console.log(CheckerBoard);
+        //console.log(CheckerBoard);
 
         let content="";
         let i;
@@ -56,7 +56,7 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_GameStart(e){
-        console.log(e);
+        ///console.log(e);
 
         let Sign = document.getElementById('ELEM_Sign');
         Sign.innerHTML="游戏开始";
@@ -72,7 +72,7 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_Round(e){
-        console.log(e);
+        //console.log(e);
 
         let Sign = document.getElementById('ELEM_Sign');
         let s = "";
@@ -96,7 +96,7 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_GameEnd(e){
-        console.log(e);
+        //console.log(e);
         
         let Sign = document.getElementById('ELEM_Sign');
 

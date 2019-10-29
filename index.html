@@ -21,6 +21,7 @@
         <script src="js/Game/Players/AI/VirtualDisplay.js"></script>
         <script src="js/Game/Players/AI/VirtualPlayer.js"></script>
         <script src="js/Game/Players/AI/GreedyAIPlayer.js"></script>
+        <script src="js/Game/Players/AI/MinimaxAIPlayer.js"></script>
 
     </head>
     <body>
@@ -39,7 +40,7 @@
             <script>
                 GameControl = new Core();
                 PlayerA = new HumanPlayer();
-                PlayerB = new GreedyAiPlayer();
+                PlayerB = new MinimaxAIPlayer();
                 ADisplay = new GameDisplay();
                 GameControl.Initialize(PlayerA,PlayerB,ADisplay);
 

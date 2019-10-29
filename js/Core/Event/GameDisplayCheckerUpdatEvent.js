@@ -26,11 +26,11 @@ class GameDisplayCheckerUpdatEvent extends Event{
      * 
      * 1 白棋
      * 
-     * 2 黑方可落子点
+     * &2 == 2 黑方可落子点
      * 
-     * 3 白方可落子点
+     * &4 == 4 白方可落子点
      * 
-     * -1 空白点
+     * &8 == 8 空白点
      */
     NewRenderingCheckerBoard=[[],[],[],[],[],[],[],[]];
 

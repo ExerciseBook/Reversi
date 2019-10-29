@@ -1,15 +1,13 @@
 /**
  * 贪心算法模拟
  */
-class GreedyAiPlayer extends AIPlayer{
+class GreedyAIPlayer extends AIPlayer{
 
     /**
      * 构造函数
      */
     constructor(){
         super();
-
-
     }
 
     /**
