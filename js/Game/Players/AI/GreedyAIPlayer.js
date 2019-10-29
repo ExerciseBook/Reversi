@@ -38,6 +38,7 @@ class GreedyAiPlayer extends AIPlayer{
             //轮到我下棋
 
             let Next = {x:0, y:0, Scores:-114514};
+            let Count = 0;
             let i;
             let j;
             for (i=0;i<8;i++){
@@ -45,10 +46,18 @@ class GreedyAiPlayer extends AIPlayer{
                     let Simulation = this.CloneTheGameControl(e.GameControl);
                     if ( Simulation.Players[ this.Identity ].PlaceChess(i,j) == 0 ) {
                         let Scores = Simulation.GetScores();
-                        if ( Scores[ this.Identity ] - Scores[ 1-this.Identity ]  > Next.Scores ) {
+                        let value = Scores[ this.Identity ] - Scores[ 1-this.Identity ] ;
+
+                        if ( value > Next.Scores ) {
+                            Count=1;
+                        } else if ( value == Next.Scores) {
+                            Count++;
+                        }
+
+                        if (Math.random() < 1.0/Count) {
                             Next.x = i;
                             Next.j = j;
-                            Next.Score = Scores[ [this.Identity ] - Scores[ 1-this.Identity ] ];
+                            Next.Scores = value;
                         }
                     }
                 }
