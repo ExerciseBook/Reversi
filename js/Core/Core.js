@@ -512,4 +512,49 @@ class Core{
         AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         this.Event_BroadCast_GameEnd_Actice(this.Players[1],AnotherEndEvent);
     }
+
+    /**
+     * 克隆游戏状态
+     * 
+     * @param {*} Status 
+     */
+    Clone(Status){
+        let Simulation = new Core();
+        Simulation.GameStatus = this.GameStatus;
+        Simulation.Players = [Status.Players[0], Status.Players[1]];
+
+        Simulation.CheckerBoard=[
+            [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
+            [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
+            [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
+            [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
+            [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
+            [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
+            [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
+            [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null]
+        ];
+
+        let i;
+        let j;
+        for (i=0;i<8;i++){
+            for (j=0;j<8;j++){
+                if (this.CheckerBoard[i][j]==this.Players[0]) {
+                    Simulation.CheckerBoard[i][j] = Simulation.Players[0];
+                } else if (this.CheckerBoard[i][j]==this.Players[1]) {
+                    Simulation.CheckerBoard[i][j] = Simulation.Players[1];
+                };
+
+            }
+        }
+
+        Simulation.DisplayControl = Status.DisplayControl;
+
+        Simulation.Players[0].GameControl = Simulation;
+        Simulation.Players[0].Identity = 0;
+
+        Simulation.Players[1].GameControl = Simulation;
+        Simulation.Players[1].Identity = 1;
+        
+        return Simulation;
+    }
 }
