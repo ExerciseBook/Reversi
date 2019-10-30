@@ -25,7 +25,7 @@ class GameDisplay extends Display{
         for (i=0;i<8;i++) {
 
             content=content+"<tr height=\"20\">";
-
+            let s = ""+i+": ";
             for (j=0;j<8;j++) {
 
                 content=content+"<td ";
@@ -38,8 +38,14 @@ class GameDisplay extends Display{
 
                 content=content+" width=\"20\"></td>"
 
-            }
+                if ( (e.NewRenderingCheckerBoard[i][j] & 8)!=8 ) {
+                    s = s + (e.NewRenderingCheckerBoard[i][j] & 1);
+                } else {
+                    s = s + " "
+                };
 
+            }
+            console.log(s);
             content=content+"</tr>";
         }
 

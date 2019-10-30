@@ -6,7 +6,7 @@ class MinimaxAIPlayer extends AIPlayer{
     /**
      * 决策树迭代深度
      */
-    Max_Depth = 2;
+    Max_Depth = 4;
 
     /**
      * 构造函数
@@ -39,7 +39,7 @@ class MinimaxAIPlayer extends AIPlayer{
     Event_Round(e){
         if (e.Operator==this) {
             //轮到我下棋
-            let NextPosition = this.MaxMinSearch( this.CloneTheGameControl(e.GameControl) ,0);
+            let NextPosition = this.MaxMinSearch( this.CloneTheGameControl(e.GameControl), 0, -Infinity, Infinity);
             console.log(NextPosition);
             this.PlaceChess(NextPosition.X, NextPosition.Y);
         } else {
@@ -64,7 +64,7 @@ class MinimaxAIPlayer extends AIPlayer{
      * 
      * @return {*} 下子坐标
      */
-    MaxMinSearch(Simulation,Depth) {
+    MaxMinSearch(Simulation, Depth, Alpha, Beta) {
         /// Depth
         /// 偶数
         ///     己方    Simulation.Players[this.Identity]
@@ -91,52 +91,55 @@ class MinimaxAIPlayer extends AIPlayer{
                 throw new Error("WDNMD.");
             }
             return {X:NaN, Y:NaN, Value:value};
-        } else {
-            let i;
-            //let flag = true;
-            let Ans = {X:NaN, Y:NaN, Value:NaN};
+        }
 
-            if ( (Depth & 1) == 0){
-                // 偶数
-                Ans.Value = -Infinity;
-            } else {
-                // 奇数
-                Ans.Value = Infinity;
-            }
-            
+        if ( (Depth & 1) == 0){
+            // 偶数
+            let Ans = {X:NaN, Y:NaN, Value:-Infinity};
 
             for (let APossiavleMove of PossiableMoves) {
                 let NewSimulation = this.CloneTheGameControl(Simulation);
-                if (Depth & 1 == 0) {
-                    NewSimulation.Players[ this.Identity ].PlaceChess(APossiavleMove.X,APossiavleMove.Y);
-                } else {
-                    NewSimulation.Players[ 1-this.Identity ].PlaceChess(APossiavleMove.X,APossiavleMove.Y);
-                }
                 
+                NewSimulation.Players[ this.Identity ].PlaceChess(APossiavleMove.X,APossiavleMove.Y);
 
-                let PossiableAns = this.MaxMinSearch(NewSimulation,Depth+1);
+                let PossiableAns = this.MaxMinSearch(NewSimulation, Depth+1, Alpha, Beta);
                 PossiableAns.X = APossiavleMove.X;
                 PossiableAns.Y = APossiavleMove.Y;
                 
-                if ( (Depth & 1) == 0){
-                    // 偶数
-                    if (PossiableAns.Value > Ans.Value) {
-                        Ans = PossiableAns;
-                        //flag = false;
-                    }
-                } else {
-                    // 奇数
-                    if (PossiableAns.Value < Ans.Value) {
-                        Ans = PossiableAns;
-                        //flag = false;
-                    }
+                if (PossiableAns.Value > Ans.Value) {
+                    Ans = PossiableAns;
                 }
+
+                Alpha = Math.max(Alpha, Ans.Value);
+
+                if (Alpha >= Beta) break;
+
             }
 
-            //console.log(PossiableMoves);
-            //if (flag) {
-            //    throw new Error("WDNMD.");
-            //}
+            return Ans;
+        } else {
+            // 奇数
+            let Ans = {X:NaN, Y:NaN, Value:Infinity};
+
+            for (let APossiavleMove of PossiableMoves) {
+                let NewSimulation = this.CloneTheGameControl(Simulation);
+                
+                NewSimulation.Players[ 1-this.Identity ].PlaceChess(APossiavleMove.X,APossiavleMove.Y);
+
+                let PossiableAns = this.MaxMinSearch(NewSimulation, Depth+1, Alpha, Beta);
+                PossiableAns.X = APossiavleMove.X;
+                PossiableAns.Y = APossiavleMove.Y;
+                
+                if (PossiableAns.Value < Ans.Value) {
+                    Ans = PossiableAns;
+                }
+
+                Beta = Math.min(Beta, Ans.Value);
+
+                if (Alpha >= Beta) break;
+
+            }
+
             return Ans;
         }
 
