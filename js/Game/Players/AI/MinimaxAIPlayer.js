@@ -84,7 +84,7 @@ class MinimaxAIPlayer extends AIPlayer{
         }
        
 
-        if ( (Depth >= this.Max_Depth) || (PossiableMoves.length == 0) ) {
+        if ( (Depth > this.Max_Depth) || (PossiableMoves.length == 0) ) {
             let Scores = Simulation.GetScores();
             let value = Scores[ this.Identity ] - Scores[ 1-this.Identity ] ;
             if (Depth == 0) {
@@ -93,7 +93,7 @@ class MinimaxAIPlayer extends AIPlayer{
             return {X:NaN, Y:NaN, Value:value};
         } else {
             let i;
-            let flag = true;
+            //let flag = true;
             let Ans = {X:NaN, Y:NaN, Value:NaN};
 
             if ( (Depth & 1) == 0){
@@ -122,21 +122,21 @@ class MinimaxAIPlayer extends AIPlayer{
                     // 偶数
                     if (PossiableAns.Value > Ans.Value) {
                         Ans = PossiableAns;
-                        flag = false;
+                        //flag = false;
                     }
                 } else {
                     // 奇数
                     if (PossiableAns.Value < Ans.Value) {
                         Ans = PossiableAns;
-                        flag = false;
+                        //flag = false;
                     }
                 }
             }
 
             //console.log(PossiableMoves);
-            if (flag) {
-                throw new Error("WDNMD.");
-            }
+            //if (flag) {
+            //    throw new Error("WDNMD.");
+            //}
             return Ans;
         }
 
