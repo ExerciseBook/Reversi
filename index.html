@@ -1,96 +1,179 @@
+<!DOCTYPE html>
 <html>
-    <meta charset="utf-8">
-    <head>
-        <title>黑白棋 🤔</title>
-        <script src="js/Core/Core.js"></script>
-
-        <script src="js/Core/Event/Event.js"></script>
-        <script src="js/Core/Event/GameCoreReverseEvent.js"></script>
-        <script src="js/Core/Event/GameEndEvent.js"></script>
-        <script src="js/Core/Event/GameStartEvent.js"></script>
-        <script src="js/Core/Event/GameRoundEvent.js"></script>
-        <script src="js/Core/Event/GameDisplayCheckerUpdatEvent.js"></script>
-
-
-        <script src="js/Core/Player.js"></script>
-        <script src="js/Core/Display.js"></script>
-
-        <script src="js/Game/GameDisplay.js"></script>
-        <script src="js/Game/Players/HumanPlayer.js"></script>
-        <script src="js/Game/Players/AI/AIPlayer.js"></script>
-        <script src="js/Game/Players/AI/VirtualDisplay.js"></script>
-        <script src="js/Game/Players/AI/VirtualPlayer.js"></script>
-        <script src="js/Game/Players/AI/GreedyAIPlayer.js"></script>
-        <script src="js/Game/Players/AI/MinimaxAIPlayer.js"></script>
-
-    </head>
-    <body>
-        
-            <div id="ELEM_Sign"></div>
-            <table id="ELEM_CheckerBoard"></table>
-            
-
-            <p>
-                行：<input id="ELEM_input_X"/>
-                列：<input id="ELEM_input_Y"/>
-                <input type="button" value="下棋" onClick="PlaceAChess()"/>
-            </p>
-            <div id="ELEM_input_Sign"></div>
-
-            <script>
-                GameControl = new Core();
-                PlayerA = new HumanPlayer();
-                PlayerB = new MinimaxAIPlayer();
-                ADisplay = new GameDisplay();
-                GameControl.Initialize(PlayerA,PlayerB,ADisplay);
-
-
-                function PlaceAChess(){
-                    let Input_X = document.getElementById('ELEM_input_X');
-                    let Input_Y = document.getElementById('ELEM_input_Y');
-
-                    /// 判断轮到谁下棋
-                    let APlayer = null;
-                    if (GameControl.GameStatus == 0) {
-                        APlayer = GameControl.Players[0];
-                    } else if (GameControl.GameStatus == 1) {
-                        //APlayer = GameControl.Players[1];
-                    }
-
-                    if (APlayer == null) {return;};
-
-                    if (APlayer.PlaceChess(Number(Input_X.value),Number(Input_Y.value))==0) {
-                        /// 下棋成功
-                        Input_X.value ="";
-                        Input_Y.value ="";
-                        document.getElementById('ELEM_input_Sign').innerHTML="落子成功！";
-                    } else {
-                        /// 下棋失败
-                        document.getElementById('ELEM_input_Sign').innerHTML="落子失败！";
-                    };
-                }
-
-                function PlaceAChessWithPosition(X,Y){
-                    let APlayer=null;
-                    if (GameControl.GameStatus == 0) {
-                        APlayer = GameControl.Players[0];
-                    } else if (GameControl.GameStatus == 1) {
-                        //APlayer = GameControl.Players[1];
-                    }
-
-                    if (APlayer == null) {return;};
-
-                    if (APlayer.PlaceChess(X,Y)==0) {
-                        /// 下棋成功
-                        document.getElementById('ELEM_input_Sign').innerHTML="落子成功！";
-                    } else {
-                        /// 下棋失败
-                        document.getElementById('ELEM_input_Sign').innerHTML="落子失败！";
-                    };
-                }
-            </script>
-
-
-
-    </body>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>光与对立的故事</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	<script src="//at.alicdn.com/t/font_1477749_3t3yea0awq1.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script src="js/Core/Core.js"></script>
+	
+	<script src="js/Core/Event/Event.js"></script>
+	<script src="js/Core/Event/GameCoreReverseEvent.js"></script>
+	<script src="js/Core/Event/GameEndEvent.js"></script>
+	<script src="js/Core/Event/GameStartEvent.js"></script>
+	<script src="js/Core/Event/GameRoundEvent.js"></script>
+	<script src="js/Core/Event/GameDisplayCheckerUpdatEvent.js"></script>
+	
+	<script src="js/Core/Player.js"></script>
+	<script src="js/Core/Display.js"></script>
+	
+	<script src="js/Game/GameDisplay.js"></script>
+	<script src="js/Game/Players/HumanPlayer.js"></script>
+	<script src="js/Game/Players/AI/AIPlayer.js"></script>
+	<script src="js/Game/Players/AI/VirtualDisplay.js"></script>
+	<script src="js/Game/Players/AI/VirtualPlayer.js"></script>
+	<script src="js/Game/Players/AI/GreedyAIPlayer.js"></script>
+	<script src="js/Game/Players/AI/MinimaxAIPlayer.js"></script>
+	
+	<script type="text/javascript">
+		
+		document.addEventListener('plusready', function(){
+			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			
+		});
+		
+	</script>
+</head>
+<body>
+	<div id="game">
+		<div class="bg">
+			<transition name="fade">
+				<div v-if="show_game" class="board-bg bg-cover" key="bg1"></div>
+				<div v-if="!show_game" class="bg-cover" key="bg2"></div>
+			</transition>
+			<img class="bg-img" src="img/bg.png" >
+		</div>
+		<div class="pop">
+			<transition name="pop">
+				<div v-if="show_pop" class="pop-bg">
+				</div>
+			</transition>
+			<transition name="fade">
+				<div v-if="show_pop" class="pop-content">
+					<p class="pop-title">{{pop_title}}</p>
+					<div v-if="pop_type == 'choose_level'" class="title-btns">
+						<a @click="start_level('easy')">
+							<span>新手</span>
+							<svg class="icon" aria-hidden="true">
+								<use xlink:href="#icon-title-btn"></use>
+							</svg>
+						</a>
+						<a @click="start_level('hard')">
+							<span>入门</span>
+							<svg class="icon" aria-hidden="true">
+								<use xlink:href="#icon-title-btn"></use>
+							</svg>
+						</a>
+						<a @click="close_pop">
+							<span>取消</span>
+							<svg class="icon" aria-hidden="true">
+								<use xlink:href="#icon-title-btn"></use>
+							</svg>
+						</a>
+					</div>
+					<div v-if="pop_type == 'about'" class="about title-btns">
+						<div class="game-about">
+							<p>算法：Eric</p>
+							<p>设计：陆陆侠</p>
+						</div>
+						<a @click="close_pop">
+							<span>返回</span>
+							<svg class="icon" aria-hidden="true">
+								<use xlink:href="#icon-title-btn"></use>
+							</svg>
+						</a>
+					</div>
+					<div v-if="pop_type == 'game'" class="title-btns">
+						<a @click="return_title">
+							<span>返回主界面</span>
+							<svg class="icon" aria-hidden="true">
+								<use xlink:href="#icon-title-btn"></use>
+							</svg>
+						</a>
+						<a>
+							<span>重新开始</span>
+							<svg class="icon" aria-hidden="true">
+								<use xlink:href="#icon-title-btn"></use>
+							</svg>
+						</a>
+						<a @click="close_pop">
+							<span>取消</span>
+							<svg class="icon" aria-hidden="true">
+								<use xlink:href="#icon-title-btn"></use>
+							</svg>
+						</a>
+					</div>
+				</div>
+			</transition>
+		</div>
+		<transition name="fade">
+		<div v-if="show_title" class="title">
+			<div class="logo">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#icon-logo"></use>
+				</svg>
+			</div>
+			<div class="title-btns">
+				<a @click="start_game">
+					<span>开始游戏</span>
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-title-btn"></use>
+					</svg>
+				</a>
+				<a @click="about_game">
+					<span>关于</span>
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-title-btn"></use>
+					</svg>
+				</a>
+			</div>
+		</div>
+		</transition>
+		<transition name="fade">
+		<div v-if="show_game" class="ingame">
+			<div class="game-info">
+				<div class="info-type">
+					<p>光VS对立</p>
+				</div>
+				<div class="info-round">
+					<p>第<span>1</span>回合</p>
+				</div>
+				<div class="info-score">
+					<p>得分2/2</p>
+				</div>
+			</div>
+			<div class="board">
+				<ul v-for="(line, x) in checkerboard">
+					<li @click="place_chess(x, y)" v-for="(cell, y) in line">
+						<transition name="chess">
+						<div v-if="cell == '0'" class="black"></div>
+						</transition>
+						<transition name="chess">
+						<div v-if="cell == '1'" class="white"></div>
+						</transition>
+					</li>
+				</ul>
+			</div>
+			<div class="game-menu">
+				<div class="menu-btn">
+					<a>
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-back"></use>
+						</svg>
+					</a>
+					<a @click="menu">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-menu"></use>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</div>
+		</transition>
+	</div>
+	<script src="js/game.js" type="text/javascript" charset="utf-8"></script>
+</body>
 </html>

@@ -1,0 +1,236 @@
+*{
+	padding: 0;
+    margin: 0;
+    font-family: "Microsoft Yahei";
+}
+html, body{
+	width: 100%;
+	height: 100%;
+}
+body{
+    overflow: hidden;
+	transform: translateZ(0);
+}
+.icon{
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.15em;
+	fill: currentColor;
+	overflow: hidden;
+}
+.bg{
+	position: absolute;
+	z-index: -1;
+}
+.bg-img{
+	object-fit: cover;
+}
+.bg-cover{
+	position: absolute;
+	background: linear-gradient(to bottom, rgba(255,255,255,0.9) 10%,rgba(255,255,255,0) 100%);
+}
+#game, .title, .bg, .bg-img, .bg-cover, .pop-animate, .ingame{
+	width: 100%;
+	height: 100%;
+}
+.logo, .title-btns{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+.logo{
+	height: 60%;
+}
+.logo svg{
+	font-size: 17em;
+	animation: logo 60s linear infinite;
+}
+.title-btns{
+	flex-direction: column;
+	height: 40%;
+}
+.title-btns svg{
+	display: block;
+	fill-opacity: 0.6;
+	font-size: 2.25em;
+	width: 7.4em;
+	height: 1em;
+	fill: #00386f;
+}
+.title-btns span{
+	position: absolute;
+	text-align: center;
+	width: 16.65em;
+	line-height: 2.25em;
+    margin-top: 0.1em;
+    font-weight: bold;
+	color: #00386f;
+    letter-spacing: 0.1em;
+}
+.title-btns a{
+    margin: 0.5em 0;
+}
+@keyframes logo{
+	0%	{fill: #00386f;}
+	33%	{fill: #7023b8;}
+	66% {fill: #922ac2;}
+	100%{fill: #00386f;}
+}
+.fade-enter-active, .fade-leave-active {
+	pointer-events: none;
+	transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to{
+	opacity: 0;
+}
+/* 弹窗 */
+.pop{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.pop-bg{
+    position: absolute;
+    transform: rotate(45deg);
+    width: 25em;
+    height: 25em;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 0 0.2em #00386f, 0 0 0 0.8em rgba(255, 255, 255, 0.8);
+    z-index: 1;
+}
+.pop-enter-active{
+	pointer-events: none;
+	animation: pop 0.8s;
+}
+.pop-leave-active{
+	pointer-events: none;
+	animation: pop 0.8s reverse;
+}
+@keyframes pop{
+	0%	{transform: scale(0.8) rotate(45deg);opacity: 0;}
+	50%	{transform: scale(1.1) rotate(45deg);opacity: 1;}
+	100%{transform: scale(1) rotate(45deg);}
+}
+.pop-content{
+	display: block;
+	z-index: 1;
+	margin-bottom: 3em;
+}
+.pop-title{
+	display: block;
+	width: fit-content;
+	font-size: 1.5em;
+	letter-spacing: 0.2em;
+	background: #00386f;
+	color: #fff;
+	padding: 0.1em 0.1em 0.2em 0.3em;
+	margin: 1em auto;
+}
+.game-about{
+	margin-bottom: 1em;
+}
+/* 游戏中 */
+.ingame{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	flex-direction: column;
+}
+.game-info{
+	position: relative;
+	display: block;
+	width: calc(100% - 2em);
+	z-index: -1;
+}
+.info-type{
+	font-size: 1.5em;
+	font-weight: bold;
+	letter-spacing: 0.5em;
+	-webkit-background-clip:text;
+	color: transparent;
+	background-image: linear-gradient(90deg, #08AEEA 0%, #2AF598 100%);
+}
+.info-round{
+	font-size: 1em;
+	font-weight: bold;
+	letter-spacing: 0.2em;
+	-webkit-background-clip:text;
+	color: transparent;
+	background-image: linear-gradient(90deg, #08AEEA 0%, #2AF598 100%);
+}
+.info-score{
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	font-size: 1em;
+	font-weight: bold;
+	letter-spacing: 0.2em;
+	-webkit-background-clip:text;
+	color: transparent;
+	background-image: linear-gradient(90deg, #F76B1C 0%, #fa6161 100%);
+}
+.board{
+	border: 0.2em solid #7b7b7b;
+	box-shadow: 0 0.5em 0 rgba(123, 123, 123, 0.3);
+	margin: 1em 0;
+}
+.board-bg{
+	background: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.95) 20%,rgba(255,255,255,0.95) 80%,rgba(255,255,255,0.5) 100%);
+}
+.board ul{
+	display: block;
+	height: calc((100vw - 2em) / 8);
+}
+.board li{
+	position: relative;
+	display: inline-block;
+	width: calc((100vw - 2em) / 8);
+	height: calc((100vw - 2em) / 8);
+	background: #fff;
+	box-sizing: border-box;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+}
+.black{
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	transform: scale(0.8);
+	background: #a0a0a0;
+}
+.white{
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	transform: scale(0.8);
+	border: 5px solid #a0a0a0;
+	box-sizing: border-box;
+}
+.chess-enter-active, .chess-leave-active {
+	position: absolute;
+	transition: opacity 0.5s;
+}
+.chess-enter, .chess-leave-to{
+	opacity: 0;
+}
+.game-menu{
+	height: 3em;
+}
+.menu-btn{
+	position: absolute;
+	right: 0.5em;
+}
+.menu-btn a{
+	display: inline-block;
+	font-size: 2em;
+	width: 1.5em;
+	height: 1.5em;
+	line-height: 1.5em;
+	text-align: center;
+	color: #5b5b5b;
+}

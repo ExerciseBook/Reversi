@@ -14,42 +14,19 @@ class GameDisplay extends Display{
      * 本方法会在棋盘更新时被触发
      */
     CheckerBoardUpdate(e){
-        //console.log(e);
-
-        let CheckerBoard = document.getElementById('ELEM_CheckerBoard');
-        //console.log(CheckerBoard);
-
-        let content="";
-        let i;
-        let j;
-        for (i=0;i<8;i++) {
-
-            content=content+"<tr height=\"20\">";
-            let s = ""+i+": ";
-            for (j=0;j<8;j++) {
-
-                content=content+"<td ";
-                
-                if (e.NewCheckerBoard[i][j] == e.Players[0]) {
-                    content=content+"bgcolor=\"black\"";
-                } else if (e.NewCheckerBoard[i][j] == e.Players[1]) {
-                    content=content+"bgcolor=\"white\"";
-                } else content=content+"bgcolor=\"blue\" onClick=\"PlaceAChessWithPosition("+i+","+j+")\"";
-
-                content=content+" width=\"20\"></td>"
-
-                if ( (e.NewRenderingCheckerBoard[i][j] & 8)!=8 ) {
-                    s = s + (e.NewRenderingCheckerBoard[i][j] & 1);
-                } else {
-                    s = s + " "
-                };
-
-            }
-            console.log(s);
-            content=content+"</tr>";
-        }
-
-        CheckerBoard.innerHTML=content;
+		let i;
+		let j;
+		let CheckerBoard = e.NewCheckerBoard
+		for(i=0; i<8; i++){
+			for(j=0; j<8; j++){
+				if(e.NewCheckerBoard[i][j] == e.Players[0]){
+					CheckerBoard[i][j] = 0;
+				}else if(e.NewCheckerBoard[i][j] == e.Players[1]){
+					CheckerBoard[i][j] = 1;
+				}
+			}
+		}
+		game.checkerboard = CheckerBoard;
     }
 
     /**
@@ -62,10 +39,7 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_GameStart(e){
-        ///console.log(e);
-
-        let Sign = document.getElementById('ELEM_Sign');
-        Sign.innerHTML="游戏开始";
+        console.log(e);
     }
 
     /**
@@ -78,20 +52,7 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_Round(e){
-        //console.log(e);
-
-        let Sign = document.getElementById('ELEM_Sign');
-        let s = "";
-
-        if (e.Operator == e.GameControl.Players[0]) {
-            s = "1P 黑方回合";
-        } else if (e.Operator == e.GameControl.Players[1]) {
-            s = "2P 白方回合";
-        } else {
-            throw new Error("WDNMD.");
-        }
-
-        Sign.innerHTML=s;
+        console.log(e);
     }
     
     /**
@@ -102,27 +63,7 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_GameEnd(e){
-        //console.log(e);
-        
-        let Sign = document.getElementById('ELEM_Sign');
-
-        // e.Winner.Scores[] // 得分
-        let s = ""+e.Scores[0]+":"+e.Scores[1]+" ";
-
-        if (e.Winner == e.GameControl.Players[0]) {
-            //1P 黑方胜
-            s=s+"1P 黑方胜";
-        } else if (e.Winner == e.GameControl.Players[1]) {
-            //2P 白方胜
-            s=s+"2P 白方胜";
-        } else if (e.WInner == e.GameControl) {
-            //平局
-            s=s+"平局";
-        }
-
-        Sign.innerHTML=s;
-        
-
+        console.log(e);
     }
 
     
