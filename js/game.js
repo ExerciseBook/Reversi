@@ -7,6 +7,8 @@ var game = new Vue({
 		pop_title: "",
 		show_game: 0,
 		game_player: 1,
+        game_round: 1,
+        info_talk: "",
 		checkerboard: [
 			[0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0],
@@ -50,6 +52,7 @@ var game = new Vue({
 			this.show_pop = 0
 		},
 		start_level: function(level){
+            loadModel();
 			this.show_pop = 0
 			this.show_title = 0
 			this.show_game = 1
@@ -67,7 +70,7 @@ var game = new Vue({
 			*/
 			APlayer = GameControl.Players[0]
 			APlayer.PlaceChess(x, y)
-		}
+        },
 	},
 	created: function(){
 		

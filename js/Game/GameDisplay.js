@@ -14,19 +14,35 @@ class GameDisplay extends Display{
      * 本方法会在棋盘更新时被触发
      */
     CheckerBoardUpdate(e){
+		console.log(e)
 		let i;
 		let j;
-		let CheckerBoard = e.NewCheckerBoard
+		let OldCheckerBoard = e.OldCheckerBoard;
+		let NewCheckerBoard = e.NewCheckerBoard;
 		for(i=0; i<8; i++){
 			for(j=0; j<8; j++){
 				if(e.NewCheckerBoard[i][j] == e.Players[0]){
-					CheckerBoard[i][j] = 0;
+					NewCheckerBoard[i][j] = 0;
 				}else if(e.NewCheckerBoard[i][j] == e.Players[1]){
-					CheckerBoard[i][j] = 1;
+					NewCheckerBoard[i][j] = 1;
 				}
 			}
 		}
-		game.checkerboard = CheckerBoard;
+		for(i=0; i<8; i++){
+			for(j=0; j<8; j++){
+				if(e.OldCheckerBoard[i][j] == e.Players[0]){
+					OldCheckerBoard[i][j] = 0;
+				}else if(e.OldCheckerBoard[i][j] == e.Players[1]){
+					OldCheckerBoard[i][j] = 1;
+				}
+			}
+		}
+        game.checkerboard = OldCheckerBoard;
+        game.info_talk = "少女祈祷中……"
+		setTimeout(()=>{
+            game.checkerboard = NewCheckerBoard;
+            game.info_talk = ""
+		},2000)
     }
 
     /**
@@ -39,6 +55,10 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_GameStart(e){
+        game.info_talk = "又来了不知天高地厚的家伙么"
+        setTimeout(()=>{
+            game.info_talk = ""
+        },2000)
         console.log(e);
     }
 

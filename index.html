@@ -27,7 +27,13 @@
 	<script src="js/Game/Players/AI/VirtualPlayer.js"></script>
 	<script src="js/Game/Players/AI/GreedyAIPlayer.js"></script>
 	<script src="js/Game/Players/AI/MinimaxAIPlayer.js"></script>
-	
+    
+    <script src="js/Live2d/pixi/pixi.min.js"></script>
+    <script src="js/Live2d/core/live2dcubismcore.min.js"></script>
+    <script src="js/Live2d/framework/live2dcubismframework.js"></script>
+    <script src="js/Live2d/framework/live2dcubismpixi.js"></script>
+    <script src="js/Live2d/loadModel.js"></script>
+
 	<script type="text/javascript">
 		
 		document.addEventListener('plusready', function(){
@@ -48,8 +54,7 @@
 		</div>
 		<div class="pop">
 			<transition name="pop">
-				<div v-if="show_pop" class="pop-bg">
-				</div>
+				<div v-if="show_pop" class="pop-bg"></div>
 			</transition>
 			<transition name="fade">
 				<div v-if="show_pop" class="pop-content">
@@ -139,11 +144,16 @@
 					<p>光VS对立</p>
 				</div>
 				<div class="info-round">
-					<p>第<span>1</span>回合</p>
-				</div>
-				<div class="info-score">
-					<p>得分2/2</p>
-				</div>
+					<p>第<span>{{game_round}}</span>回合 2/2</p>
+                </div>
+                <transition name="fade">
+				<div v-if="info_talk" class="info-talk">
+					<p>{{info_talk}}</p>
+                </div>
+                </transition>
+                <div class="live2d">
+                    <canvas></canvas>
+                </div>
 			</div>
 			<div class="board">
 				<ul v-for="(line, x) in checkerboard">
@@ -157,7 +167,7 @@
 					</li>
 				</ul>
 			</div>
-			<div class="game-menu">
+			<div class="game-menzu">
 				<div class="menu-btn">
 					<a>
 						<svg class="icon" aria-hidden="true">
