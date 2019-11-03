@@ -33,17 +33,24 @@ class Core{
     Players=[];
 
     /**
+     * 显示渲染控件
+     */
+    DisplayControl;
+
+    /**
+     * 操作锁
+     */
+    _Mutex = false;
+
+    /**
      * 构造函数
      * 
      * 并没啥卵用
      */
     constructor() {
+        this._Mutex = false;
     }
 
-    /**
-     * 显示渲染控件
-     */
-    DisplayControl;
     
     /**
      * 游戏初始化
@@ -53,6 +60,9 @@ class Core{
      * @param {Display} ADisplay
      */
     Initialize(PlayerA,PlayerB,ADisplay){
+        if (this._Mutex) return;
+        this._Mutex = true;
+
         this.CheckerBoard=[
             [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
             [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
@@ -93,9 +103,10 @@ class Core{
         // 广播游戏开始事件
         this.Event_BroadCast_GameStart();
 
+        this._Mutex = false;
+
         // 广播游戏回合事件
         this.Event_BroadCast_Round();
-
     }
     
     /**
@@ -146,6 +157,7 @@ class Core{
             if (APlayer==this.CheckerBoard[i][j]) {
                 HasSelf = true;
                 Self = {x:i,y:j};
+                break;
             }
         }
 
@@ -328,14 +340,18 @@ class Core{
      * @return {int} 0:正常 -2:落子位置非法 -1:信息非法 -3:游戏状态失效
      */
     PlaceChess(APlayer,x,y){
+        if (this._Mutex) return;
 
-
-        if ( (this.GameStatus!=0) && (this.GameStatus!=1) ) return -3;
+        if ( (this.GameStatus!=0) && (this.GameStatus!=1) ) {
+            return -3;
+        }
 
         if ( ( (this.GameStatus==0) && (APlayer==this.Players[0]) ) || ( (this.GameStatus==1) && (APlayer==this.Players[1]) ) ) {
+            this._Mutex = true;
 
             let ReverseEvent = new GameCoreReverseEvent() ;
             if (!this.VerifyPlacing(APlayer,x,y,ReverseEvent)){
+                this._Mutex = false;
                 return -2;
             };
             
@@ -357,6 +373,7 @@ class Core{
 
             this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
 
+            this._Mutex = false;
 
             if ( (this.GameStatus==0) || (this.GameStatus==1) ) {
                 // 游戏尚未结束
@@ -369,11 +386,11 @@ class Core{
             } else {
                 throw new Error("WDNMD.");
             }
-
+            
             return 0;
 
         } else {
-
+            this._Mutex = false;
             return -1;
 
         }
@@ -432,26 +449,18 @@ class Core{
         return RenderingCheckerBoard;
     }
     
-    async Event_BroadCast_GameStart_Actice(module,e){
-        module.Event_GameStart(e);
-    }
-
     async Event_BroadCast_GameStart(){
         let AGameStartEvent = new GameStartEvent();
         AGameStartEvent.GameControl = this;
-        this.Event_BroadCast_GameStart_Actice(this.DisplayControl,AGameStartEvent);
+        Event_BroadCast_GameStart_Active(this.DisplayControl,AGameStartEvent);
 
         AGameStartEvent = new GameStartEvent();
         AGameStartEvent.GameControl = this;
-        this.Event_BroadCast_GameStart_Actice(this.Players[0],AGameStartEvent);
+        Event_BroadCast_GameStart_Active(this.Players[0],AGameStartEvent);
 
         AGameStartEvent = new GameStartEvent();
         AGameStartEvent.GameControl = this;
-        this.Event_BroadCast_GameStart_Actice(this.Players[1],AGameStartEvent);
-    }
-
-    async Event_BroadCast_Round_Actice(module,e){
-        module.Event_Round(e);
+        Event_BroadCast_GameStart_Active(this.Players[1],AGameStartEvent);
     }
 
     async Event_BroadCast_Round(){
@@ -466,21 +475,24 @@ class Core{
         let AnotherGameRoundEvent = new GameRoundEvent();
         AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
-        this.Event_BroadCast_Round_Actice(this.DisplayControl,AnotherGameRoundEvent);
+        setTimeout(() => {
+            Event_BroadCast_Round_Active(this.DisplayControl,AnotherGameRoundEvent);
+        }, 50); 
 
         AnotherGameRoundEvent = new GameRoundEvent();
         AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
-        this.Event_BroadCast_Round_Actice(this.Players[0],AnotherGameRoundEvent);
+        setTimeout(() => {
+            Event_BroadCast_Round_Active(this.Players[0],AnotherGameRoundEvent);
+        }, 50)
+        
 
         AnotherGameRoundEvent = new GameRoundEvent();
         AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
-        this.Event_BroadCast_Round_Actice(this.Players[1],AnotherGameRoundEvent);
-    }
-
-    async Event_BroadCast_GameEnd_Actice(module,e){
-        module.Event_GameEnd(e);
+        setTimeout(() => {
+            Event_BroadCast_Round_Active(this.Players[1],AnotherGameRoundEvent);
+        }, 50)
     }
 
     async Event_BroadCast_GameEnd(){
@@ -501,19 +513,19 @@ class Core{
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        this.Event_BroadCast_GameEnd_Actice(this.DisplayControl,AnotherEndEvent);
+        Event_BroadCast_GameEnd_Active(this.DisplayControl,AnotherEndEvent);
 
         AnotherEndEvent = new GameEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        this.Event_BroadCast_GameEnd_Actice(this.Players[0],AnotherEndEvent);
+        Event_BroadCast_GameEnd_Active(this.Players[0],AnotherEndEvent);
 
         AnotherEndEvent = new GameEndEvent();
         AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
         AnotherEndEvent.Winner = AGameEndEvent.Winner;
         AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        this.Event_BroadCast_GameEnd_Actice(this.Players[1],AnotherEndEvent);
+        Event_BroadCast_GameEnd_Active(this.Players[1],AnotherEndEvent);
     }
 
     /**
@@ -560,4 +572,17 @@ class Core{
         
         return Simulation;
     }
+}
+
+
+async function Event_BroadCast_GameStart_Active(module,e){
+    module.Event_GameStart(e);
+}
+
+async function Event_BroadCast_Round_Active(module,e){
+    module.Event_Round(e);
+}
+
+async function Event_BroadCast_GameEnd_Active(module,e){
+    module.Event_GameEnd(e);
 }
