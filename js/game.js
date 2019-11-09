@@ -58,7 +58,7 @@ var game = new Vue({
 			this.show_game = 1
 			GameControl = new Core()
 			PlayerA = new HumanPlayer()
-			PlayerB = new MinimaxAIPlayer()
+			PlayerB = new AIPlayer_Remi()
 			ADisplay = new GameDisplay()
 			GameControl.Initialize(PlayerA,PlayerB,ADisplay)
 		},

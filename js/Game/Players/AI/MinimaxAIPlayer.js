@@ -6,7 +6,7 @@ class MinimaxAIPlayer extends AIPlayer{
     /**
      * 决策树迭代深度
      */
-    Max_Depth = 2;
+    Max_Depth = 4;
 
     /**
      * 构造函数
@@ -85,8 +85,7 @@ class MinimaxAIPlayer extends AIPlayer{
        
 
         if ( (Depth > this.Max_Depth) || (PossiableMoves.length == 0) ) {
-            let Scores = Simulation.GetScores();
-            let value = Scores[ this.Identity ] - Scores[ 1-this.Identity ] ;
+            let value = this.Evaluation(Simulation);
             if (Depth == 0) {
                 throw new Error("WDNMD.");
             }

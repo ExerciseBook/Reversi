@@ -43,8 +43,7 @@ class GreedyAIPlayer extends AIPlayer{
                 for (j=0;j<8;j++){
                     let Simulation = this.CloneTheGameControl(e.GameControl);
                     if ( Simulation.Players[ this.Identity ].PlaceChess(i,j) == 0 ) {
-                        let Scores = Simulation.GetScores();
-                        let value = Scores[ this.Identity ] - Scores[ 1-this.Identity ] ;
+                        let value = this.Evaluation(Simulation);
 
                         if ( value > Next.Scores ) {
                             Count=1;

@@ -154,6 +154,9 @@ class Core{
             i+=DirectionX;
             j+=DirectionY;
             if ( !((0<=i) && (i<8) && (0<=j) && (j<8)) ) break;
+            if (this.CheckerBoard[i][j]==null){
+                break;
+            }
             if (APlayer==this.CheckerBoard[i][j]) {
                 HasSelf = true;
                 Self = {x:i,y:j};
