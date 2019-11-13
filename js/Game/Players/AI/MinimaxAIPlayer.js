@@ -65,23 +65,25 @@ class MinimaxAIPlayer extends AIPlayer{
      * @return {*} 下子坐标
      */
     MaxMinSearch(Simulation, Depth, Alpha, Beta) {
-        /// Depth
-        /// 偶数
+        /// Simulation.GameStatus == this.Identity
         ///     己方    Simulation.Players[this.Identity]
         ///     取大    Max
-        /// 奇数
+        /// Simulation.GameStatus == 1-this.Identity
         ///     敌方    Simulation.Players[1-this.Identity]
         ///     取小    Min
         
         let PossiableMoves;
 
-        if ( (Depth & 1) == 0){
-            // 偶数
+        if ( Simulation.GameStatus == this.Identity ){
+            // 己方
             PossiableMoves = this.GetPossiableMoves(Simulation,this.Identity).sort(this.RandomSort);
-        } else {
-            // 奇数
+        } else if ( Simulation.GameStatus == (1-this.Identity) ) {
+            // 敌方
             PossiableMoves = this.GetPossiableMoves(Simulation,1-this.Identity).sort(this.RandomSort);
-        }
+        } else {
+            let value = this.Evaluation(Simulation);
+            return {X:NaN, Y:NaN, Value:value};
+        };
        
 
         if ( (Depth > this.Max_Depth) || (PossiableMoves.length == 0) ) {
@@ -92,8 +94,8 @@ class MinimaxAIPlayer extends AIPlayer{
             return {X:NaN, Y:NaN, Value:value};
         }
 
-        if ( (Depth & 1) == 0){
-            // 偶数
+        if ( Simulation.GameStatus == this.Identity ){
+            // 己方
             let Ans = {X:NaN, Y:NaN, Value:-Infinity};
 
             for (let APossiavleMove of PossiableMoves) {
@@ -117,7 +119,7 @@ class MinimaxAIPlayer extends AIPlayer{
 
             return Ans;
         } else {
-            // 奇数
+            // 敌方
             let Ans = {X:NaN, Y:NaN, Value:Infinity};
 
             for (let APossiavleMove of PossiableMoves) {
