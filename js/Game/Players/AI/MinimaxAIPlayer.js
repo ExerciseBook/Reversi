@@ -1,5 +1,5 @@
 /**
- * 极大极小值搜索 与 ALpha - Beta 剪枝
+ * 极大极小值搜索 与 ALpha - Beta 剪枝 与 蒙特卡洛树
  */
 class MinimaxAIPlayer extends AIPlayer{
 
@@ -61,6 +61,8 @@ class MinimaxAIPlayer extends AIPlayer{
      * 
      * @param {*} GameControl 
      * @param {*} Depth 
+     * @param {*} Alpha
+     * @param {*} Beta
      * 
      * @return {*} 下子坐标
      */
@@ -146,10 +148,27 @@ class MinimaxAIPlayer extends AIPlayer{
 
     };
 
+    /**
+     * 优先选择看起来更妙的步骤来展开搜索
+     * 
+     * @param {*} a 
+     * @param {*} b 
+     */
     RandomSort(a, b) {
+        if (a>b) {
+            return 1;
+        } else if (a<b) {
+            return -1;
+        };
         return Math.random()>.5 ? -1 : 1;
     }
 
+    /**
+     * 获取所有的落子点
+     * 
+     * @param {*} _Simulation 
+     * @param {*} ID 
+     */
     GetPossiableMoves(_Simulation,ID) {
         let ret = [];
 
@@ -159,8 +178,11 @@ class MinimaxAIPlayer extends AIPlayer{
         let j;
         for (i=0;i<8;i++){
             for (j=0;j<8;j++){
-                if ( ( (ID==0) && ((Map[i][j]&2)==2) ) || ( (ID==1) && ((Map[i][j]&4)==4) ) ) 
-                    ret.push({X:i, Y:j});
+                if ( ( (ID==0) && ((Map[i][j]&2)==2) ) || ( (ID==1) && ((Map[i][j]&4)==4) ) ) {
+                    let NewSimulation = this.CloneTheGameControl(_Simulation);
+                    NewSimulation.Players[ this.Identity ].PlaceChess(i,j);
+                    ret.push({X:i, Y:j, Value:this.Evaluation(NewSimulation)});
+                }
             }
         }
 
