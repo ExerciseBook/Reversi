@@ -180,7 +180,7 @@ class MinimaxAIPlayer extends AIPlayer{
             for (j=0;j<8;j++){
                 if ( ( (ID==0) && ((Map[i][j]&2)==2) ) || ( (ID==1) && ((Map[i][j]&4)==4) ) ) {
                     let NewSimulation = this.CloneTheGameControl(_Simulation);
-                    NewSimulation.Players[ this.Identity ].PlaceChess(i,j);
+                    NewSimulation.Players[ ID ].PlaceChess(i,j);
                     ret.push({X:i, Y:j, Value:this.Evaluation(NewSimulation)});
                 }
             }
