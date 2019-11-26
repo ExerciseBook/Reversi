@@ -7,7 +7,7 @@ var game = new Vue({
 		pop_title: "",
 		show_game: 0,
 		game_player: 1,
-        game_round: 1,
+        game_round: 0,
         info_talk: "",
 		checkerboard: [
 			[0,0,0,0,0,0,0,0],
@@ -18,7 +18,8 @@ var game = new Vue({
 			[0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0]
-		]
+		],
+		game_score: [2,2]
 		
 	},
 	methods: {

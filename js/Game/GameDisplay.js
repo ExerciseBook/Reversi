@@ -14,10 +14,10 @@ class GameDisplay extends Display{
      * 本方法会在棋盘更新时被触发
      */
     CheckerBoardUpdate(e){
-		console.log(e)
+		//console.log(e)
 		let i;
 		let j;
-		let OldCheckerBoard = e.OldCheckerBoard;
+		//let OldCheckerBoard = e.OldCheckerBoard;
 		let NewCheckerBoard = e.NewCheckerBoard;
 		for(i=0; i<8; i++){
 			for(j=0; j<8; j++){
@@ -28,21 +28,23 @@ class GameDisplay extends Display{
 				}
 			}
 		}
-		for(i=0; i<8; i++){
-			for(j=0; j<8; j++){
-				if(e.OldCheckerBoard[i][j] == e.Players[0]){
-					OldCheckerBoard[i][j] = 0;
-				}else if(e.OldCheckerBoard[i][j] == e.Players[1]){
-					OldCheckerBoard[i][j] = 1;
-				}
-			}
-		}
-        game.checkerboard = OldCheckerBoard;
-        game.info_talk = "少女祈祷中……"
-		setTimeout(()=>{
-            game.checkerboard = NewCheckerBoard;
-            game.info_talk = ""
-		},2000)
+		//for(i=0; i<8; i++){
+		//	for(j=0; j<8; j++){
+		//		if(e.OldCheckerBoard[i][j] == e.Players[0]){
+		//			OldCheckerBoard[i][j] = 0;
+		//		}else if(e.OldCheckerBoard[i][j] == e.Players[1]){
+		//			OldCheckerBoard[i][j] = 1;
+		//		}
+		//	}
+        //}
+        game.game_score = e.Scores;
+        game.checkerboard = NewCheckerBoard;
+        
+        //game.info_talk = "少女祈祷中……"
+		//setTimeout(()=>{
+        //    //game.checkerboard = NewCheckerBoard;
+        //    game.info_talk = ""
+		//},2000)
     }
 
     /**
@@ -59,7 +61,7 @@ class GameDisplay extends Display{
         setTimeout(()=>{
             game.info_talk = ""
         },2000)
-        console.log(e);
+        //console.log(e);
     }
 
     /**
@@ -72,7 +74,13 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_Round(e){
-        console.log(e);
+        game.game_round ++;
+        if (e.Operator == e.GameControl.Players[1]) {
+            game.info_talk = "少女祈祷中……";
+        } else {
+            game.info_talk = "";
+        }
+        //console.log(e);
     }
     
     /**
@@ -83,7 +91,14 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_GameEnd(e){
-        console.log(e);
+        game.game_score = e.Scores;
+
+        if (e.Winner == e.GameControl.Players[1]) {
+            game.info_talk = "你输🌶！！！";
+        } else {
+            game.info_talk = "我输了。";
+        }
+        //console.log(e);
     }
 
     

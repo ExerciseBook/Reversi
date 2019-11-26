@@ -1,5 +1,5 @@
 /**
- * 极大极小值搜索 与 ALpha - Beta 剪枝 与 蒙特卡洛树
+ * 极大极小值搜索 与 ALpha - Beta 剪枝
  */
 class MinimaxAIPlayer extends AIPlayer{
 
@@ -155,9 +155,9 @@ class MinimaxAIPlayer extends AIPlayer{
      * @param {*} b 
      */
     RandomSort(a, b) {
-        if (a>b) {
+        if (a.Value>b.Value) {
             return 1;
-        } else if (a<b) {
+        } else if (a.Value<b.Value) {
             return -1;
         };
         return Math.random()>.5 ? -1 : 1;
@@ -181,12 +181,45 @@ class MinimaxAIPlayer extends AIPlayer{
                 if ( ( (ID==0) && ((Map[i][j]&2)==2) ) || ( (ID==1) && ((Map[i][j]&4)==4) ) ) {
                     let NewSimulation = this.CloneTheGameControl(_Simulation);
                     NewSimulation.Players[ ID ].PlaceChess(i,j);
-                    ret.push({X:i, Y:j, Value:this.Evaluation(NewSimulation)});
+                    ret.push({X:i, Y:j, Value:this.SearchEvaluation(NewSimulation,ID)});
                 }
             }
         }
 
         return ret;
+    }
+
+    SearchValueWeight=[
+        [64,32,16, 8, 8,16,32,64],
+        [32,16, 8, 4, 4, 8,16,32],
+        [16, 8, 4, 2, 2, 4, 8,16],
+        [ 8, 4, 2, 1, 1, 2, 4, 8],
+        [ 8, 4, 2, 1, 1, 2, 4, 8],
+        [16, 8, 4, 2, 2, 4, 8,16],
+        [32,16, 8, 4, 4, 8,16,32],
+        [64,32,16, 8, 8,16,32,64]
+    ];
+
+    SearchEvaluation(Simulation,ID){
+
+        if (Simulation.Gamestatus!=1 && Simulation.Gamestatus!=2) return 0;
+
+        let Scores = 0;
+        let i;
+        let j;zz
+        for (i=0;i<8;i++){
+            for (j=0;j<8;j++){
+                if (Simulation.CheckerBoard[i][j] == null) {
+                    continue;
+                } else if (Simulation.CheckerBoard[i][j].Identity == Simulation.Players[ ID ] ) {
+                    Scores += this.SearchValueWeight[i][j];
+                } else if (Simulation.CheckerBoard[i][j].Identity == Simulation.Players[ 1-ID ] ) {
+                    Scores -= this.SearchValueWeight[i][j];
+                }
+            }
+        }
+
+        return Scores;
     }
     
 }

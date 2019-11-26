@@ -67,8 +67,8 @@ class Core{
             [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
             [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
             [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
-            [null   ,null   ,null   ,PlayerA,PlayerB,null   ,null   ,null],
             [null   ,null   ,null   ,PlayerB,PlayerA,null   ,null   ,null],
+            [null   ,null   ,null   ,PlayerA,PlayerB,null   ,null   ,null],
             [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
             [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null],
             [null   ,null   ,null   ,null   ,null   ,null   ,null   ,null]
@@ -453,17 +453,17 @@ class Core{
     }
     
     async Event_BroadCast_GameStart(){
-        let AGameStartEvent = new GameStartEvent();
-        AGameStartEvent.GameControl = this;
-        Event_BroadCast_GameStart_Active(this.DisplayControl,AGameStartEvent);
+        let AGameStartEvent0 = new GameStartEvent();
+        AGameStartEvent0.GameControl = this;
+        Event_BroadCast_GameStart_Active(this.DisplayControl,AGameStartEvent0);
 
-        AGameStartEvent = new GameStartEvent();
-        AGameStartEvent.GameControl = this;
-        Event_BroadCast_GameStart_Active(this.Players[0],AGameStartEvent);
+        let AGameStartEvent1 = new GameStartEvent();
+        AGameStartEvent1.GameControl = this;
+        Event_BroadCast_GameStart_Active(this.Players[0],AGameStartEvent1);
 
-        AGameStartEvent = new GameStartEvent();
-        AGameStartEvent.GameControl = this;
-        Event_BroadCast_GameStart_Active(this.Players[1],AGameStartEvent);
+        let AGameStartEvent2 = new GameStartEvent();
+        AGameStartEvent2.GameControl = this;
+        Event_BroadCast_GameStart_Active(this.Players[1],AGameStartEvent2);
     }
 
     async Event_BroadCast_Round(){
@@ -475,27 +475,27 @@ class Core{
             AGameRoundEvent.Operator = this.Players[1];
         } else AGameRoundEvent.Operator = null;
 
-        let AnotherGameRoundEvent = new GameRoundEvent();
-        AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
-        AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
+        let AnotherGameRoundEvent0 = new GameRoundEvent();
+        AnotherGameRoundEvent0.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent0.Operator = AGameRoundEvent.Operator;
         setTimeout(() => {
-            Event_BroadCast_Round_Active(this.DisplayControl,AnotherGameRoundEvent);
+            Event_BroadCast_Round_Active(this.DisplayControl,AnotherGameRoundEvent0);
         }, 50); 
 
-        AnotherGameRoundEvent = new GameRoundEvent();
-        AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
-        AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
+        let AnotherGameRoundEvent1 = new GameRoundEvent();
+        AnotherGameRoundEvent1.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent1.Operator = AGameRoundEvent.Operator;
         setTimeout(() => {
-            Event_BroadCast_Round_Active(this.Players[0],AnotherGameRoundEvent);
-        }, 50)
+            Event_BroadCast_Round_Active(this.Players[0],AnotherGameRoundEvent1);
+        }, 100)
         
 
-        AnotherGameRoundEvent = new GameRoundEvent();
-        AnotherGameRoundEvent.GameControl = AGameRoundEvent.GameControl;
-        AnotherGameRoundEvent.Operator = AGameRoundEvent.Operator;
+        let AnotherGameRoundEvent2 = new GameRoundEvent();
+        AnotherGameRoundEvent2.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent2.Operator = AGameRoundEvent.Operator;
         setTimeout(() => {
-            Event_BroadCast_Round_Active(this.Players[1],AnotherGameRoundEvent);
-        }, 50)
+            Event_BroadCast_Round_Active(this.Players[1],AnotherGameRoundEvent2);
+        }, 150)
     }
 
     async Event_BroadCast_GameEnd(){
@@ -512,23 +512,23 @@ class Core{
         };
         AGameEndEvent.Scores=this.GetScores();
 
-        let AnotherEndEvent = new GameEndEvent();
-        AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
-        AnotherEndEvent.Winner = AGameEndEvent.Winner;
-        AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        Event_BroadCast_GameEnd_Active(this.DisplayControl,AnotherEndEvent);
+        let AnotherEndEvent0 = new GameEndEvent();
+        AnotherEndEvent0.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent0.Winner = AGameEndEvent.Winner;
+        AnotherEndEvent0.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        Event_BroadCast_GameEnd_Active(this.DisplayControl,AnotherEndEvent0);
 
-        AnotherEndEvent = new GameEndEvent();
-        AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
-        AnotherEndEvent.Winner = AGameEndEvent.Winner;
-        AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        Event_BroadCast_GameEnd_Active(this.Players[0],AnotherEndEvent);
+        let AnotherEndEvent1 = new GameEndEvent();
+        AnotherEndEvent1.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent1.Winner = AGameEndEvent.Winner;
+        AnotherEndEvent1.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        Event_BroadCast_GameEnd_Active(this.Players[0],AnotherEndEvent1);
 
-        AnotherEndEvent = new GameEndEvent();
-        AnotherEndEvent.GameControl = AGameEndEvent.GameControl;
-        AnotherEndEvent.Winner = AGameEndEvent.Winner;
-        AnotherEndEvent.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
-        Event_BroadCast_GameEnd_Active(this.Players[1],AnotherEndEvent);
+        let AnotherEndEvent2 = new GameEndEvent();
+        AnotherEndEvent2.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent2.Winner = AGameEndEvent.Winner;
+        AnotherEndEvent2.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
+        Event_BroadCast_GameEnd_Active(this.Players[1],AnotherEndEvent2);
     }
 
     /**
