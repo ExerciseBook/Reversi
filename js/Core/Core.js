@@ -343,7 +343,9 @@ class Core{
      * @return {int} 0:正常 -2:落子位置非法 -1:信息非法 -3:游戏状态失效
      */
     PlaceChess(APlayer,x,y){
-        if (this._Mutex) return;
+        if (this._Mutex) return -5;
+
+        if ( ((typeof(x) == "number") && (parseInt(x) == x)) && ((typeof(y) == "number") && (parseInt(y) == y)) ) {} else {return -4;}
 
         if ( (this.GameStatus!=0) && (this.GameStatus!=1) ) {
             return -3;
@@ -574,6 +576,30 @@ class Core{
         Simulation.Players[1].Identity = 1;
         
         return Simulation;
+    }
+
+    StatusEquals(Another) {
+        if (this.GameStatus != Another.GameStatus) return false;
+
+        let i;
+        let j;
+        for (i=0;i<8;i++){
+            for (j=0;j<8;j++){
+
+                if (this.CheckerBoard[i][j]==this.Players[0]) {
+                    if (Another.CheckerBoard[i][j]!=Another.Players[0]) return false;
+                } else if (this.CheckerBoard[i][j]==this.Players[1]) {
+                    if (Another.CheckerBoard[i][j]!=Another.Players[1]) return false;
+                } else if (this.CheckerBoard[i][j]==null) {
+                    if (Another.CheckerBoard[i][j]!=null) return false;
+                } else {
+                    throw new Error("WDNMD.");
+                }
+
+            }
+        }
+
+        return true;
     }
 }
 

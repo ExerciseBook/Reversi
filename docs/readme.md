@@ -30,7 +30,7 @@
 3. 游戏结束
 
 以下列初始化代码为例：
-```
+```JavaScript
     GameControl = new Core();   // 创建一个游戏核心 // /js/Core/Core.js
 
     PlayerA = new Player(); // 创建玩家一 // /js/Core/Player.js
@@ -46,7 +46,7 @@
 
 
 ### 游戏初始化并开始
-```
+```JavaScript
 初始化开始
 └───┐
     V
@@ -91,7 +91,7 @@ V
 ```
 
 ### 游戏回合
-```
+```JavaScript
 玩家下棋
 └───┐
     V
