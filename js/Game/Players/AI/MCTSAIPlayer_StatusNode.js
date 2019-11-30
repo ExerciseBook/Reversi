@@ -66,8 +66,8 @@ class MCTSAIPlayer_StatusNode{
         let LHS = a.Win * b.Total;
         let RHS = a.Total * b.Win;
 
-        if (LHS > RHS) return 1;
-        if (LHS < RHS) return -1;
+        if (LHS > RHS) return -1;
+        if (LHS < RHS) return 1;
         return Math.random()>.5 ? -1 : 1;
     }
 

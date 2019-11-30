@@ -201,11 +201,11 @@ class MinimaxAIPlayer extends AIPlayer{
      */
     SearchOrderComparator(a, b) {
         if (a.Value>b.Value) {
-            return 1;
-        } else if (a.Value<b.Value) {
             return -1;
+        } else if (a.Value<b.Value) {
+            return 1;
         };
         return Math.random()>.5 ? -1 : 1;
     }
-    
+
 }
