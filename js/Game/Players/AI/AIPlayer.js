@@ -68,6 +68,16 @@ class AIPlayer extends Player{
     }
 
     /**
+     * 分数差
+     * 
+     * @param {*} Simulation 
+     */
+    ScoresDiff(Simulation){
+        let Scores = Simulation.GetScores();
+        return Scores[ this.Identity ] - Scores[ 1-this.Identity ] ;
+    }
+
+    /**
      * 获取所有的落子点
      * 
      * @param {*} _Simulation 

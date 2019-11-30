@@ -8,6 +8,7 @@ class GreedyAIPlayer extends AIPlayer{
      */
     constructor(){
         super();
+        this.Evaluation=this.ScoresDiff;
     }
 
     /**
@@ -77,13 +78,4 @@ class GreedyAIPlayer extends AIPlayer{
     Event_GameEnd(e){
     }
 
-    /**
-     * 估值函数
-     * 
-     * @param {*} Simulation 
-     */
-    Evaluation(Simulation){
-        let Scores = Simulation.GetScores();
-        return Scores[ this.Identity ] - Scores[ 1-this.Identity ] ;
-    }
 }

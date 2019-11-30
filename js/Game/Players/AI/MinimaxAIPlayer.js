@@ -83,7 +83,7 @@ class MinimaxAIPlayer extends AIPlayer{
             // 敌方
             PossiableMoves = this.GetPossiableMoves(Simulation,1-this.Identity).sort(this.SearchOrderComparator);
         } else {
-            let value = super.Evaluation(Simulation);
+            let value = this.ScoresDiff(Simulation);
             if (value != 0) {
                 return {X:NaN, Y:NaN, Value:value*Infinity};
             } else {
