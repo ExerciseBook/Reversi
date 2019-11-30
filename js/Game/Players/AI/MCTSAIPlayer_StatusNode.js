@@ -63,8 +63,11 @@ class MCTSAIPlayer_StatusNode{
      * @param {*} b 
      */
     ChildrenComparator(a, b) {
-        if (a.GetRate()>b.GetRate()) return 1;
-        if (a.GetRate()<b.GetRate()) return -1;
+        let LHS = a.Win * b.Total;
+        let RHS = a.Total * b.Win;
+
+        if (LHS > RHS) return 1;
+        if (LHS < RHS) return -1;
         return Math.random()>.5 ? -1 : 1;
     }
 
