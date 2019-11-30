@@ -44,13 +44,15 @@ class MCTSAIPlayer extends AIPlayer{
      */
     Event_Round(e){
         this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
-        //console.log(this.StatusRoot);
+        console.log(this.StatusRoot.GetRate(),this.StatusRoot);
         if (e.Operator==this) {
             //轮到我下棋
             let NextPosition = this.MCTSSearch();
+            while (isNaN(NextPosition.X)){
+                NextPosition = this.MCTSSearch();
+            } 
             console.log(NextPosition);
             if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
-            console.log(this.StatusRoot);
         } else {
             //没有轮到我下棋
         }
@@ -129,70 +131,13 @@ class MCTSAIPlayer extends AIPlayer{
         NextPosition.Value = NowStatus.Children[0].GetRate();
         return NextPosition;
 
-        /*
-        let NextPosition
-        NextPosition = {X:NaN, Y:NaN, Value:-Infinity}
-
-        for (let i of NowStatus.Children) {
-            let Value = i.GetRate;
-
-            if ( Value > NextPosition.Value ) {
-                NextPosition.X = i.Move.X;
-                NextPosition.Y = i.Move.Y;
-                NextPosition.Value = Value;
-            }
-
-        }
-        return NextPosition;
-        */
     }
 
     /**
      * 给这个树添枝加叶（确信）
      */
     ExpendSearch(){
-
         return this.ExpendSearchMain(this.StatusRoot,1);
-
-
-        /*
-        /// 抵达一个叶子结点
-        let Stack = [];
-        let NowStatus = this.StatusRoot;
-        Stack.push (NowStatus);
-        while (NowStatus.Children.length > 0) {
-            NowStatus.ChildrenSort();
-
-            let p = null;
-            for (let i of NowStatus.Children) {
-                if ((i.Status.Status == 0) || (i.Status.Status == 1)) {
-                    p = i;
-                    break;
-                }
-            }
-
-            NowStatus = NowStatus.Children[0];
-            Stack.push (NowStatus);
-        };
-
-        
-        if ( Simulation.GameStatus == this.Identity ){
-            // 己方
-            PossiableMoves = this.GetPossiableMoves(Simulation,this.Identity).sort(this.SearchOrderComparator);
-        } else if ( Simulation.GameStatus == (1-this.Identity) ) {
-            // 敌方
-            PossiableMoves = this.GetPossiableMoves(Simulation,1-this.Identity).sort(this.SearchOrderComparator);
-        } else {
-            let value = super.Evaluation(Simulation);
-            if (value != 0) {
-                return {X:NaN, Y:NaN, Value:value*Infinity};
-            } else {
-                return {X:NaN, Y:NaN, Value:0};
-            }
-        };
-        
-        
-        */
     }
 
     /**

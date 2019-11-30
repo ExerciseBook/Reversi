@@ -79,57 +79,45 @@ class MCTSAIPlayer_StatusNode{
         this.Total=0;
 
         if (this.Children.length>0) {
+            let InfCount = 0;
             for (let i of this.Children){
-                this.Win+=i.Win;
+                if (i.Win == Infinity) {
+                    InfCount++;
+                } else if (i.Win == -Infinity) {
+                    InfCount--;
+                } else {
+                    this.Win+=i.Win;
+                }
                 this.Total+=i.Total;
-            };            
+            };
+            if (InfCount*this.Total>0)
+                this.Win = this.Win + 1.1**InfCount*this.Total;
+            else if (InfCount*this.Total<0)
+                this.Win = this.Win - 1.1**(-InfCount*this.Total);
         } else {
             this.Total=1;
             let Simulation = this.Status;
             if ( (Simulation.GameStatus==0) || (Simulation.GameStatus==1) ) {
                 /// 游戏未结束
-                let Value = Simulation.Players[this.Identity].Evaluation(Simulation);
-                if (Value > 0) {
-                    this.Win+=1;
-                } else if (Value == 0) {
-                    this.Win+=0.5;
-                }
+                this.Win = Simulation.Players[this.Identity].Evaluation(Simulation);
             } else {
                 /// 游戏已结束
                 if (Simulation.GameStatus == 8) {
-                    this.Win+=0.5 
+                    this.Win=0;
                 } else if ((Simulation.GameStatus == 9) && (this.Identity==0)) {
-                    this.Win+=1
+                    this.Win=Infinity;
                 } else if ((Simulation.GameStatus == 10) && (this.Identity==1)) {
-                    this.Win+=1
+                    this.Win=Infinity;
+                } else if ((Simulation.GameStatus == 9) && (this.Identity==1)) {
+                    this.Win=-Infinity;
+                } else if ((Simulation.GameStatus == 10) && (this.Identity==0)) {
+                    this.Win=-Infinity;
                 } else {
                     //throw new Error("WDNMD");
                 }
             }
         }
-        /*
-        this.Win=0;
-        this.Total=this.Children.length;
-        for (let i of this.Children){
-            let Simulation = i.Status;
-            if ( (Simulation.GameStatus==0) || (Simulation.GameStatus==1) ) {
-                /// 游戏未结束
-                let Value = Simulation.Players[this.Identity].Evaluation(Simulation);
-                if (Value > 0) {
-                    this.Win+=1;
-                } else if (Value == 0) {
-                    this.Win+=0.5;
-                }
-            } else {
-                /// 游戏已结束
-                if (Simulation.GameStatus == 10) {
-                    this.Win+=0.5 
-                } else if ((Simulation.GameStatus & 1) == this.Identity) {
-                    this.Win+=1
-                }
-            }
-        }
-        */
+
     }
     
 }
