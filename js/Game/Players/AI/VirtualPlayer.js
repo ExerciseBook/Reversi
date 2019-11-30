@@ -1,7 +1,7 @@
 /**
  * 人类玩家类
  */
-class VirtualPlayer extends Player{
+class VirtualPlayer extends AIPlayer{
 
     /**
      * 构造函数
