@@ -6,7 +6,7 @@ class MCTSAIPlayer extends AIPlayer{
     /**
      * 搜索最大耗时
      */
-    SearchTimeLimitation = 20 * 1000;
+    SearchTimeLimitation = 15 * 1000;
 
     /**
      * 构造函数
@@ -53,7 +53,7 @@ class MCTSAIPlayer extends AIPlayer{
         }
         */
 
-        console.log(this.StatusRoot.GetRate(),this.StatusRoot);
+        //console.log(this.StatusRoot.GetRate(),this.StatusRoot);
         if (e.Operator==this) {
             //轮到我下棋
             let NextPosition = this.MCTSSearch();
@@ -61,7 +61,8 @@ class MCTSAIPlayer extends AIPlayer{
                 this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
                 NextPosition = this.MCTSSearch();
             } 
-            console.log(NextPosition);
+            //NextPosition.Count = this.StatusRoot.Total;
+            //console.log(NextPosition);
             if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
 
             /*
@@ -175,7 +176,7 @@ class MCTSAIPlayer extends AIPlayer{
      * @return {*} 1 扩展成功 | 0 扩展失败
      */
     ExpendSearchMain(NowStatus,Depth){
-        if (Depth >= 6) return 0;
+        if (Depth > 6) return 0;
 
         if (NowStatus.Children.length == 0) {
             /// NowStatus 为叶子结点
@@ -213,7 +214,7 @@ class MCTSAIPlayer extends AIPlayer{
             if ( (NowStatus.Status.GameStatus==0 && this.Identity==0) || (NowStatus.Status.GameStatus==1 && this.Identity==1) ) {
 
                 if (Math.random()>=0.70710678118654752440084436210485) { 
-                    NowStatus.ChildrenSort();
+                    
                 } else {
                     NowStatus.Children.sort(function(a,b){return Math.random()>0.5 ? -1 : 1;});
                 };

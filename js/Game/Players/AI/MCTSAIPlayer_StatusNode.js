@@ -59,7 +59,7 @@ class MCTSAIPlayer_StatusNode{
             ( this.Status.GameStatus==9   && this.Identity==0 ) ||  
             ( this.Status.GameStatus==10  && this.Identity==1 )
         ) {
-            return 1-(this.Win / this.Total);
+            return -(this.Win / this.Total);
         } else return this.Win / this.Total;
     }
     
@@ -114,34 +114,21 @@ class MCTSAIPlayer_StatusNode{
         this.Total=0;
 
         if (this.Children.length>0) {
-            let InfCount = 0;
-            for (let i of this.Children){
-                if (i.Win == Infinity) {
-                    InfCount++;
-                } else if (i.Win == -Infinity) {
-                    InfCount--;
-                } else {
-                    this.Win+=i.Win;
-                }
-                this.Total+=i.Total;
-            };
-            if (InfCount*this.Total>0)
-                this.Win = this.Win + (2**InfCount)*this.Total*1000;
-            else if (InfCount*this.Total<0)
-                this.Win = this.Win - (2**(-InfCount))*this.Total*1000;
+
+            this.ChildrenSort();
+
+            for (let i of this.Children) {
+                this.Total+= i.Total;
+            }
+
+            this.Win=this.Children[0].GetRate()*this.Total;
+
         } else {
             this.Total=1;
             let Simulation = this.Status;
             if ( (Simulation.GameStatus==0) || (Simulation.GameStatus==1) ) {
                 /// 游戏未结束
                 this.Win = Simulation.Players[this.Identity].Evaluation(Simulation);
-                /*if (this.Win>0) {
-                    this.Win = 1;
-                } else if (this.Win) {
-                    this.Win = 0;
-                } else {
-                    this.Win = 0.5;
-                }*/
             } else {
                 /// 游戏已结束
                 if (Simulation.GameStatus == 8) {
@@ -155,6 +142,7 @@ class MCTSAIPlayer_StatusNode{
                 } else if ((Simulation.GameStatus == 10) && (this.Identity==0)) {
                     this.Win=-Infinity;
                 } else {
+                    this.Win=0;
                     //throw new Error("WDNMD");
                 }
             }

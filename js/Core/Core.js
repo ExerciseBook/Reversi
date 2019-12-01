@@ -87,7 +87,7 @@ class Core{
         this.DisplayControl = ADisplay;
         this.DisplayControl.GameControl = this;
 
-        this.GameStatus=this.UpdateGameStatus();
+        //this.GameStatus=this.UpdateGameStatus();
 
         // 广播棋盘更新事件
         let AGameDisplayCheckerUpdatEvent = new GameDisplayCheckerUpdatEvent();

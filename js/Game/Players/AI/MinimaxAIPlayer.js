@@ -27,6 +27,8 @@ class MinimaxAIPlayer extends AIPlayer{
     Event_GameStart(e){
     } 
 
+    Count = 0;
+
     /**
      * 事件 游戏回合
      * 
@@ -39,8 +41,9 @@ class MinimaxAIPlayer extends AIPlayer{
     Event_Round(e){
         if (e.Operator==this) {
             //轮到我下棋
+            this.Count = 0
             let NextPosition = this.MaxMinSearch( this.CloneTheGameControl(e.GameControl), 0, -Infinity, Infinity);
-
+            NextPosition.Count = this.Count;
             //while (isNaN(NextPosition.X)){
             //    NextPosition = this.MaxMinSearch( this.CloneTheGameControl(e.GameControl), 0, -Infinity, Infinity);
             //} 
@@ -78,6 +81,7 @@ class MinimaxAIPlayer extends AIPlayer{
         /// Simulation.GameStatus == 1-this.Identity
         ///     敌方    Simulation.Players[1-this.Identity]
         ///     取小    Min
+        this.Count ++;
         
         let PossiableMoves;
 
