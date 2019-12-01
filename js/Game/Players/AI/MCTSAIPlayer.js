@@ -6,7 +6,7 @@ class MCTSAIPlayer extends AIPlayer{
     /**
      * 搜索最大耗时
      */
-    SearchTimeLimitation = 10 * 1000;
+    SearchTimeLimitation = 20 * 1000;
 
     /**
      * 构造函数
@@ -44,15 +44,33 @@ class MCTSAIPlayer extends AIPlayer{
      */
     Event_Round(e){
         this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
+
+        //console.log(this.StatusRoot.GetRate(),this.StatusRoot);
+        /*
+        this.StatusRoot.ChildrenSort();
+        for (let i of this.StatusRoot.Children) {
+            console.log("#",i.Status.GameStatus,i.Move,i.GetRate(),i);
+        }
+        */
+
         console.log(this.StatusRoot.GetRate(),this.StatusRoot);
         if (e.Operator==this) {
             //轮到我下棋
             let NextPosition = this.MCTSSearch();
             while (isNaN(NextPosition.X)){
+                this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
                 NextPosition = this.MCTSSearch();
             } 
             console.log(NextPosition);
             if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
+
+            /*
+            this.StatusRoot.ChildrenSort();
+            for (let i of this.StatusRoot.Children) {
+                console.log("##",i.Status.GameStatus,i.Move,i.GetRate(),i);
+            }
+            */
+    
         } else {
             //没有轮到我下棋
         }
@@ -66,6 +84,7 @@ class MCTSAIPlayer extends AIPlayer{
      * @param {Event} e 
      */
     Event_GameEnd(e){
+        this.StatusRoot=null;
         return null;
     }
 
@@ -126,9 +145,16 @@ class MCTSAIPlayer extends AIPlayer{
         let NextPosition
         NowStatus.ChildrenSort();
         NextPosition = {X:NaN, Y:NaN, Value:-Infinity}
-        NextPosition.X = NowStatus.Children[0].Move.X;
-        NextPosition.Y = NowStatus.Children[0].Move.Y;
-        NextPosition.Value = NowStatus.Children[0].GetRate();
+
+        for (let i of NowStatus.Children) {
+            if (((i.Status.GameStatus==1) && (this.Identity==0)) || ((i.Status.GameStatus==0) && (this.Identity==1))) {
+                NextPosition.X = i.Move.X;
+                NextPosition.Y = i.Move.Y;
+                NextPosition.Value = i.GetRate();
+                break;
+            }
+        }
+
         return NextPosition;
 
     }
@@ -183,14 +209,33 @@ class MCTSAIPlayer extends AIPlayer{
                 return 0;
             }
         } else {
+
+            if ( (NowStatus.Status.GameStatus==0 && this.Identity==0) || (NowStatus.Status.GameStatus==1 && this.Identity==1) ) {
+
+                if (Math.random()>=0.70710678118654752440084436210485) { 
+                    NowStatus.ChildrenSort();
+                } else {
+                    NowStatus.Children.sort(function(a,b){return Math.random()>0.5 ? -1 : 1;});
+                };
+
+            } else if ( (NowStatus.Status.GameStatus==0 && this.Identity==1) || (NowStatus.Status.GameStatus==1 && this.Identity==0) ) {
+                
+                if (Math.random()<0.70710678118654752440084436210485) { 
+                    NowStatus.ChildrenSort();
+                } else {
+                    NowStatus.Children.sort(function(a,b){return Math.random()>0.5 ? -1 : 1;});
+                };
+
+            }
+
             for (let i of NowStatus.Children) {
-                NowStatus.ChildrenSort();
                 if (this.ExpendSearchMain(i,Depth+1) == 1) {
                     /// 扩展成功，更新搜索路径上的结点的信息
                     NowStatus.Update();
                     return 1;
                 };
             }
+
         }
         return 0;
     }

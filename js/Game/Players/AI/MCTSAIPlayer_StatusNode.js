@@ -46,7 +46,21 @@ class MCTSAIPlayer_StatusNode{
      */
     GetRate(){
         if (this.Total == 0) return 0;
-        return this.Win / this.Total;
+        if (
+            ( this.Status.GameStatus==0   && this.Identity==1 ) || 
+            ( this.Status.GameStatus==1   && this.Identity==0 ) ||  
+            ( this.Status.GameStatus==9   && this.Identity==1 ) ||  
+            ( this.Status.GameStatus==10  && this.Identity==0 )
+        ) {
+            return this.Win / this.Total;
+        } else if (
+            ( this.Status.GameStatus==0   && this.Identity==0 ) || 
+            ( this.Status.GameStatus==1   && this.Identity==1 ) ||  
+            ( this.Status.GameStatus==9   && this.Identity==0 ) ||  
+            ( this.Status.GameStatus==10  && this.Identity==1 )
+        ) {
+            return 1-(this.Win / this.Total);
+        } else return this.Win / this.Total;
     }
     
     /**
@@ -63,8 +77,29 @@ class MCTSAIPlayer_StatusNode{
      * @param {*} b 
      */
     ChildrenComparator(a, b) {
-        let LHS = a.Win * b.Total;
-        let RHS = a.Total * b.Win;
+        let A = {Win:a.Win, Total:a.Total};
+        let B = {Win:b.Win, Total:b.Total};
+
+        if (
+            ( a.Status.GameStatus==0   && a.Identity==0 ) || 
+            ( a.Status.GameStatus==1   && a.Identity==1 ) ||  
+            ( a.Status.GameStatus==9   && a.Identity==0 ) ||  
+            ( a.Status.GameStatus==10  && a.Identity==1 )
+        ) {
+            A.Win = A.Total - A.Win;
+        };
+
+        if (
+            ( b.Status.GameStatus==0   && b.Identity==0 ) || 
+            ( b.Status.GameStatus==1   && b.Identity==1 ) ||  
+            ( b.Status.GameStatus==9   && b.Identity==0 ) ||  
+            ( b.Status.GameStatus==10  && b.Identity==1 )
+        ) {
+            B.Win = B.Total - B.Win;
+        };
+
+        let LHS = A.Win * B.Total;
+        let RHS = A.Total * B.Win;
 
         if (LHS > RHS) return -1;
         if (LHS < RHS) return 1;
@@ -91,15 +126,22 @@ class MCTSAIPlayer_StatusNode{
                 this.Total+=i.Total;
             };
             if (InfCount*this.Total>0)
-                this.Win = this.Win + 1.1**InfCount*this.Total;
+                this.Win = this.Win + (2**InfCount)*this.Total*1000;
             else if (InfCount*this.Total<0)
-                this.Win = this.Win - 1.1**(-InfCount*this.Total);
+                this.Win = this.Win - (2**(-InfCount))*this.Total*1000;
         } else {
             this.Total=1;
             let Simulation = this.Status;
             if ( (Simulation.GameStatus==0) || (Simulation.GameStatus==1) ) {
                 /// 游戏未结束
                 this.Win = Simulation.Players[this.Identity].Evaluation(Simulation);
+                /*if (this.Win>0) {
+                    this.Win = 1;
+                } else if (this.Win) {
+                    this.Win = 0;
+                } else {
+                    this.Win = 0.5;
+                }*/
             } else {
                 /// 游戏已结束
                 if (Simulation.GameStatus == 8) {
