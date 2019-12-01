@@ -86,7 +86,7 @@ class MCTSAIPlayer_StatusNode{
             ( a.Status.GameStatus==9   && a.Identity==0 ) ||  
             ( a.Status.GameStatus==10  && a.Identity==1 )
         ) {
-            A.Win = A.Total - A.Win;
+            A.Win = -A.Win;
         };
 
         if (
@@ -95,7 +95,7 @@ class MCTSAIPlayer_StatusNode{
             ( b.Status.GameStatus==9   && b.Identity==0 ) ||  
             ( b.Status.GameStatus==10  && b.Identity==1 )
         ) {
-            B.Win = B.Total - B.Win;
+            B.Win = -B.Win;
         };
 
         let LHS = A.Win * B.Total;

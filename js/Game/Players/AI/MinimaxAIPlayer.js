@@ -40,6 +40,11 @@ class MinimaxAIPlayer extends AIPlayer{
         if (e.Operator==this) {
             //轮到我下棋
             let NextPosition = this.MaxMinSearch( this.CloneTheGameControl(e.GameControl), 0, -Infinity, Infinity);
+
+            //while (isNaN(NextPosition.X)){
+            //    NextPosition = this.MaxMinSearch( this.CloneTheGameControl(e.GameControl), 0, -Infinity, Infinity);
+            //} 
+
             console.log(NextPosition);
             this.PlaceChess(NextPosition.X, NextPosition.Y);
         } else {
@@ -102,6 +107,7 @@ class MinimaxAIPlayer extends AIPlayer{
 
         if ( Simulation.GameStatus == this.Identity ){
             // 己方
+            let First = true;
             let Ans = {X:NaN, Y:NaN, Value:-Infinity};
 
             for (let APossiavleMove of PossiableMoves) {
@@ -113,8 +119,9 @@ class MinimaxAIPlayer extends AIPlayer{
                 PossiableAns.X = APossiavleMove.X;
                 PossiableAns.Y = APossiavleMove.Y;
                 
-                if (PossiableAns.Value > Ans.Value) {
+                if ((PossiableAns.Value > Ans.Value) || First) {
                     Ans = PossiableAns;
+                    First = false;
                 }
 
                 Alpha = Math.max(Alpha, Ans.Value);
@@ -126,6 +133,7 @@ class MinimaxAIPlayer extends AIPlayer{
             return Ans;
         } else {
             // 敌方
+            let First = true;
             let Ans = {X:NaN, Y:NaN, Value:Infinity};
 
             for (let APossiavleMove of PossiableMoves) {
@@ -137,8 +145,9 @@ class MinimaxAIPlayer extends AIPlayer{
                 PossiableAns.X = APossiavleMove.X;
                 PossiableAns.Y = APossiavleMove.Y;
                 
-                if (PossiableAns.Value < Ans.Value) {
+                if ((PossiableAns.Value < Ans.Value) || First) {
                     Ans = PossiableAns;
+                    First = false;
                 }
 
                 Beta = Math.min(Beta, Ans.Value);

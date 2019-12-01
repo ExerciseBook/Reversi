@@ -147,12 +147,12 @@ class MCTSAIPlayer extends AIPlayer{
         NextPosition = {X:NaN, Y:NaN, Value:-Infinity}
 
         for (let i of NowStatus.Children) {
-            if (((i.Status.GameStatus==1) && (this.Identity==0)) || ((i.Status.GameStatus==0) && (this.Identity==1))) {
+            //if (((i.Status.GameStatus==1) && (this.Identity==0)) || ((i.Status.GameStatus==0) && (this.Identity==1))) {
                 NextPosition.X = i.Move.X;
                 NextPosition.Y = i.Move.Y;
                 NextPosition.Value = i.GetRate();
                 break;
-            }
+            //}
         }
 
         return NextPosition;
