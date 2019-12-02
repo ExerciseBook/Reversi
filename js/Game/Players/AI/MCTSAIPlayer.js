@@ -45,7 +45,7 @@ class MCTSAIPlayer extends AIPlayer{
     Event_Round(e){
         this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
 
-        //console.log(this.StatusRoot.GetRate(),this.StatusRoot);
+        console.log(this.StatusRoot.GetRate(),this.StatusRoot);
         /*
         this.StatusRoot.ChildrenSort();
         for (let i of this.StatusRoot.Children) {
@@ -61,16 +61,16 @@ class MCTSAIPlayer extends AIPlayer{
                 this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
                 NextPosition = this.MCTSSearch();
             } 
-            //NextPosition.Count = this.StatusRoot.Total;
+            NextPosition.Count = this.StatusRoot.Total;
             //console.log(NextPosition);
-            if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
+            //console.log(this.StatusRoot);
 
-            /*
-            this.StatusRoot.ChildrenSort();
-            for (let i of this.StatusRoot.Children) {
-                console.log("##",i.Status.GameStatus,i.Move,i.GetRate(),i);
-            }
-            */
+            if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
+            
+            //this.StatusRoot.ChildrenSort();
+            //for (let i of this.StatusRoot.Children) {
+            //    console.log("##",i.Status.GameStatus,i.Move,i.GetRate(),i);
+            //}
     
         } else {
             //没有轮到我下棋
@@ -96,7 +96,7 @@ class MCTSAIPlayer extends AIPlayer{
 
         // 让俺现在这个棋盘走到的是哪一个状态
         if ((this.StatusRoot == undefined) || (this.StatusRoot == null)) {
-            this.StatusRoot = new MCTSAIPlayer_StatusNode( this.CloneTheGameControl(Simulation), this.Identity );
+            this.StatusRoot = new MCTSAIPlayer_StatusNode( this.CloneTheGameControl(Simulation), this );
         }
 
         let NowStatus = null;
@@ -108,7 +108,7 @@ class MCTSAIPlayer extends AIPlayer{
         }
 
         if (NowStatus == null) {
-            this.StatusRoot = new MCTSAIPlayer_StatusNode( this.CloneTheGameControl(Simulation), this.Identity );
+            this.StatusRoot = new MCTSAIPlayer_StatusNode( this.CloneTheGameControl(Simulation), this );
         } else {
             this.StatusRoot = NowStatus;
         }
@@ -175,8 +175,8 @@ class MCTSAIPlayer extends AIPlayer{
      * 
      * @return {*} 1 扩展成功 | 0 扩展失败
      */
-    ExpendSearchMain(NowStatus,Depth){
-        if (Depth > 6) return 0;
+    ExpendSearchMain(NowStatus, Depth){
+        //if (Depth > 6) return 0;
 
         if (NowStatus.Children.length == 0) {
             /// NowStatus 为叶子结点
@@ -193,7 +193,7 @@ class MCTSAIPlayer extends AIPlayer{
                     NewSimulation.Players[NewSimulation.GameStatus].PlaceChess(APossiavleMove.X,APossiavleMove.Y);
 
                     /// 将新的游戏状态绑定到本结点下
-                    let NewChildren = new MCTSAIPlayer_StatusNode(NewSimulation, this.Identity);
+                    let NewChildren = new MCTSAIPlayer_StatusNode(NewSimulation, this);
                     NewChildren.Move={X:APossiavleMove.X, Y:APossiavleMove.Y};
                     NowStatus.Children.push(NewChildren);
                     //console.log(NewChildren);
@@ -214,9 +214,9 @@ class MCTSAIPlayer extends AIPlayer{
             if ( (NowStatus.Status.GameStatus==0 && this.Identity==0) || (NowStatus.Status.GameStatus==1 && this.Identity==1) ) {
 
                 if (Math.random()>=0.70710678118654752440084436210485) { 
-                    
+                    NowStatus.ChildrenSort();
                 } else {
-                    NowStatus.Children.sort(function(a,b){return Math.random()>0.5 ? -1 : 1;});
+                    NowStatus.ChildrenSortWithUCT(Depth);
                 };
 
             } else if ( (NowStatus.Status.GameStatus==0 && this.Identity==1) || (NowStatus.Status.GameStatus==1 && this.Identity==0) ) {
@@ -224,17 +224,23 @@ class MCTSAIPlayer extends AIPlayer{
                 if (Math.random()<0.70710678118654752440084436210485) { 
                     NowStatus.ChildrenSort();
                 } else {
-                    NowStatus.Children.sort(function(a,b){return Math.random()>0.5 ? -1 : 1;});
+                    NowStatus.ChildrenSortWithUCT(Depth);
                 };
 
             }
 
-            for (let i of NowStatus.Children) {
-                if (this.ExpendSearchMain(i,Depth+1) == 1) {
-                    /// 扩展成功，更新搜索路径上的结点的信息
-                    NowStatus.Update();
-                    return 1;
-                };
+
+            let R = Math.min(5,NowStatus.Children.length);
+            let Flag = false;
+            for (let i = 0; i < R; i++) {
+                let Next = NowStatus.Children[i];
+                if (this.ExpendSearchMain(Next,Depth+1) == 1) {
+                    Flag = true;
+                }
+            }
+            if (Flag) {
+                NowStatus.Update();
+                return 1;
             }
 
         }

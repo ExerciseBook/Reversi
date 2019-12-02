@@ -34,33 +34,54 @@ class MCTSAIPlayer_StatusNode{
     Identity = -1;
 
     /**
+     * 玩家实例
+     */
+    ControlPlayer = null;
+
+    /**
+     * 优势
+     */
+    Evaluation = 0;
+
+    /**
      * 普通的构造函数
      */
-    constructor(Status,Identity){
+    constructor(Status,ControlPlayer){
         this.Status = Status;
-        this.Identity = Identity;
+        this.Identity = ControlPlayer.Identity;
+        this.ControlPlayer = ControlPlayer;
     }
 
     /**
      * 本结点的置信度
      */
     GetRate(){
-        if (this.Total == 0) return 0;
+        let Value = 0;
+
+        if (this.Total == 0) Value = 0;
         if (
-            ( this.Status.GameStatus==0   && this.Identity==1 ) || 
-            ( this.Status.GameStatus==1   && this.Identity==0 ) ||  
-            ( this.Status.GameStatus==9   && this.Identity==1 ) ||  
-            ( this.Status.GameStatus==10  && this.Identity==0 )
+            ( this.Status.GameStatus==0   && this.Identity==1 ) || // 游戏还未结束，下一个回合是对手 | 本结点状态是自己的状态
+            ( this.Status.GameStatus==1   && this.Identity==0 )
         ) {
-            return this.Win / this.Total;
+            Value = this.Win / this.Total;
         } else if (
-            ( this.Status.GameStatus==0   && this.Identity==0 ) || 
-            ( this.Status.GameStatus==1   && this.Identity==1 ) ||  
-            ( this.Status.GameStatus==9   && this.Identity==0 ) ||  
-            ( this.Status.GameStatus==10  && this.Identity==1 )
+            ( this.Status.GameStatus==0   && this.Identity==0 ) || // 游戏未结束，下一个回合是自己 | 本结点状态是对手的状态
+            ( this.Status.GameStatus==1   && this.Identity==1 )
         ) {
-            return -(this.Win / this.Total);
-        } else return this.Win / this.Total;
+            Value = 1-(this.Win / this.Total);
+        } else Value = this.Win / this.Total;
+        
+        //return 1 / (1 + Math.exp(-Value / 50));
+
+        return Value;
+
+        /*
+        if (Value<=-200) {
+            return 0;
+        } else if (Value<=200) {
+            return Value/400 + 0.5
+        } else return 1;
+        */
     }
     
     /**
@@ -77,32 +98,42 @@ class MCTSAIPlayer_StatusNode{
      * @param {*} b 
      */
     ChildrenComparator(a, b) {
-        let A = {Win:a.Win, Total:a.Total};
-        let B = {Win:b.Win, Total:b.Total};
+        let ARate = a.GetRate();
+        let BRate = b.GetRate();
 
-        if (
-            ( a.Status.GameStatus==0   && a.Identity==0 ) || 
-            ( a.Status.GameStatus==1   && a.Identity==1 ) ||  
-            ( a.Status.GameStatus==9   && a.Identity==0 ) ||  
-            ( a.Status.GameStatus==10  && a.Identity==1 )
-        ) {
-            A.Win = -A.Win;
-        };
+        if (Math.abs(ARate - BRate)>=1e-6) {
+            if (ARate > BRate) return -1;
+            if (BRate < ARate) return 1;
+        }
 
-        if (
-            ( b.Status.GameStatus==0   && b.Identity==0 ) || 
-            ( b.Status.GameStatus==1   && b.Identity==1 ) ||  
-            ( b.Status.GameStatus==9   && b.Identity==0 ) ||  
-            ( b.Status.GameStatus==10  && b.Identity==1 )
-        ) {
-            B.Win = -B.Win;
-        };
+        if (a.Evaluation > b.Evaluation) return -1;
+        if (a.Evaluation < b.Evaluation) return 1;
 
-        let LHS = A.Win * B.Total;
-        let RHS = A.Total * B.Win;
+        if (a.Total > b.Total) return -1;
+        if (a.Total < b.Total) return 1;
 
-        if (LHS > RHS) return -1;
-        if (LHS < RHS) return 1;
+        return Math.random()>.5 ? -1 : 1;
+    }
+
+    ChildrenSortWithUCT(Depth){
+        this.Children.sort( this.ChildrenWithUCTComparator );
+    }
+
+    ChildrenWithUCTComparator(a,b){
+        let AValue = a.GetRate() + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(a.ControlPlayer.StatusRoot.Total) / a.Total )
+        let BValue = b.GetRate() + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(b.ControlPlayer.StatusRoot.Total) / b.Total )
+
+        if (Math.abs(AValue - BValue)>=1e-6) {
+            if (AValue > BValue) return -1;
+            if (AValue < BValue) return 1;
+        }
+
+        if (a.Evaluation > b.Evaluation) return -1;
+        if (a.Evaluation < b.Evaluation) return 1;
+
+        if (a.Total > b.Total) return -1;
+        if (a.Total < b.Total) return 1;
+
         return Math.random()>.5 ? -1 : 1;
     }
 
@@ -119,30 +150,35 @@ class MCTSAIPlayer_StatusNode{
 
             for (let i of this.Children) {
                 this.Total+= i.Total;
+                this.Win+= i.Win;
             }
 
-            this.Win=this.Children[0].GetRate()*this.Total;
+            //this.Win=this.Children[0].Win / this.Children[0].Total * this.Total;
 
         } else {
             this.Total=1;
             let Simulation = this.Status;
             if ( (Simulation.GameStatus==0) || (Simulation.GameStatus==1) ) {
                 /// 游戏未结束
-                this.Win = Simulation.Players[this.Identity].Evaluation(Simulation);
+                this.Evaluation = Simulation.Players[this.Identity].Evaluation(Simulation);
+                this.Win = this.Evaluation / 400 + 0.5;
+                if (this.Win < 0) this.Win = 0;
+                if (this.Win > 1) this.Win = 1;
+                
             } else {
                 /// 游戏已结束
                 if (Simulation.GameStatus == 8) {
-                    this.Win=0;
+                    this.Win=0.5;
                 } else if ((Simulation.GameStatus == 9) && (this.Identity==0)) {
-                    this.Win=Infinity;
+                    this.Win=1;
                 } else if ((Simulation.GameStatus == 10) && (this.Identity==1)) {
-                    this.Win=Infinity;
+                    this.Win=1;
                 } else if ((Simulation.GameStatus == 9) && (this.Identity==1)) {
-                    this.Win=-Infinity;
-                } else if ((Simulation.GameStatus == 10) && (this.Identity==0)) {
-                    this.Win=-Infinity;
-                } else {
                     this.Win=0;
+                } else if ((Simulation.GameStatus == 10) && (this.Identity==0)) {
+                    this.Win=0;
+                } else {
+                    this.Win=0.5;
                     //throw new Error("WDNMD");
                 }
             }
