@@ -146,14 +146,10 @@ class MCTSAIPlayer_StatusNode{
 
         if (this.Children.length>0) {
 
-            this.ChildrenSort();
-
             for (let i of this.Children) {
                 this.Total+= i.Total;
                 this.Win+= i.Win;
             }
-
-            //this.Win=this.Children[0].Win / this.Children[0].Total * this.Total;
 
         } else {
             this.Total=1;
