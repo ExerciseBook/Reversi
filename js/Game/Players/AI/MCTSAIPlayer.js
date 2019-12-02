@@ -50,7 +50,7 @@ class MCTSAIPlayer extends AIPlayer{
     Event_Round(e){
         this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
 
-        console.log(this.StatusRoot.GetRate(),this.StatusRoot);
+        console.log(this.StatusRoot.GetRate());
 
         if (e.Operator==this) {
             //轮到我下棋
@@ -203,24 +203,7 @@ class MCTSAIPlayer extends AIPlayer{
             }
         } else {
 
-            if ( (NowStatus.Status.GameStatus==0 && this.Identity==0) || (NowStatus.Status.GameStatus==1 && this.Identity==1) ) {
-
-                if (Math.random()>=0.70710678118654752440084436210485) { 
-                    NowStatus.ChildrenSort();
-                } else {
-                    NowStatus.ChildrenSortWithUCT(Depth);
-                };
-
-            } else if ( (NowStatus.Status.GameStatus==0 && this.Identity==1) || (NowStatus.Status.GameStatus==1 && this.Identity==0) ) {
-                
-                if (Math.random()<0.70710678118654752440084436210485) { 
-                    NowStatus.ChildrenSort();
-                } else {
-                    NowStatus.ChildrenSortWithUCT(Depth);
-                };
-
-            }
-
+            NowStatus.ChildrenSort();
 
             let R = 0;
             while (R < NowStatus.Children.length) {

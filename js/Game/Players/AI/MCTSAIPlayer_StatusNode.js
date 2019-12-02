@@ -58,7 +58,7 @@ class MCTSAIPlayer_StatusNode{
     GetRate(){
         let Value = 0;
 
-        if (this.Total == 0) Value = 0;
+        if (this.Total == 0) return 0.5;
         if (
             ( this.Status.GameStatus==0   && this.Identity==1 ) || // 游戏还未结束，下一个回合是对手 | 本结点状态是自己的状态
             ( this.Status.GameStatus==1   && this.Identity==0 )
