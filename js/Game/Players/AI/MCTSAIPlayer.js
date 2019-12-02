@@ -46,14 +46,7 @@ class MCTSAIPlayer extends AIPlayer{
         this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
 
         console.log(this.StatusRoot.GetRate(),this.StatusRoot);
-        /*
-        this.StatusRoot.ChildrenSort();
-        for (let i of this.StatusRoot.Children) {
-            console.log("#",i.Status.GameStatus,i.Move,i.GetRate(),i);
-        }
-        */
 
-        //console.log(this.StatusRoot.GetRate(),this.StatusRoot);
         if (e.Operator==this) {
             //轮到我下棋
             let NextPosition = this.MCTSSearch();
@@ -61,16 +54,10 @@ class MCTSAIPlayer extends AIPlayer{
                 this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
                 NextPosition = this.MCTSSearch();
             } 
-            NextPosition.Count = this.StatusRoot.Total;
-            //console.log(NextPosition);
-            //console.log(this.StatusRoot);
+            
+            console.log(NextPosition);
 
             if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
-            
-            //this.StatusRoot.ChildrenSort();
-            //for (let i of this.StatusRoot.Children) {
-            //    console.log("##",i.Status.GameStatus,i.Move,i.GetRate(),i);
-            //}
     
         } else {
             //没有轮到我下棋
