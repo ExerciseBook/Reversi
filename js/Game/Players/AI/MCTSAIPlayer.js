@@ -6,7 +6,12 @@ class MCTSAIPlayer extends AIPlayer{
     /**
      * 搜索最大耗时
      */
-    SearchTimeLimitation = 15 * 1000;
+    SearchTimeLimitation = 20 * 1000;
+
+    /**
+     * 最大迭代深度
+     */
+    Max_Depth = 6;
 
     /**
      * 构造函数
@@ -54,7 +59,7 @@ class MCTSAIPlayer extends AIPlayer{
                 this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
                 NextPosition = this.MCTSSearch();
             } 
-            
+
             console.log(NextPosition);
 
             if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
@@ -151,7 +156,7 @@ class MCTSAIPlayer extends AIPlayer{
      * 给这个树添枝加叶（确信）
      */
     ExpendSearch(){
-        return this.ExpendSearchMain(this.StatusRoot,1);
+        return this.ExpendSearchMain(this.StatusRoot,0);
     }
 
     /**
@@ -163,7 +168,7 @@ class MCTSAIPlayer extends AIPlayer{
      * @return {*} 1 扩展成功 | 0 扩展失败
      */
     ExpendSearchMain(NowStatus, Depth){
-        //if (Depth > 6) return 0;
+        if (Depth > this.Max_Depth) return 0;
 
         if (NowStatus.Children.length == 0) {
             /// NowStatus 为叶子结点
@@ -217,18 +222,25 @@ class MCTSAIPlayer extends AIPlayer{
             }
 
 
-            let R = Math.min(5,NowStatus.Children.length);
-            let Flag = false;
-            for (let i = 0; i < R; i++) {
-                let Next = NowStatus.Children[i];
-                if (this.ExpendSearchMain(Next,Depth+1) == 1) {
-                    Flag = true;
+            let R = 0;
+            while (R < NowStatus.Children.length) {
+                let L = R;
+                R = Math.min(R+5,NowStatus.Children.length);
+
+                let Flag = false;
+                for (let i = L; i < R; i++) {
+                    let Next = NowStatus.Children[i];
+                    if (this.ExpendSearchMain(Next,Depth+1) == 1) {
+                        Flag = true;
+                    }
                 }
+                if (Flag) {
+                    NowStatus.Update();
+                    return 1;
+                }
+
             }
-            if (Flag) {
-                NowStatus.Update();
-                return 1;
-            }
+
 
         }
         return 0;
