@@ -101,7 +101,7 @@ class MCTSAIPlayer_StatusNode{
         let ARate = a.GetRate();
         let BRate = b.GetRate();
 
-        if (Math.abs(ARate - BRate)>=1e-6) {
+        if (Math.abs(ARate - BRate)>=1e-8) {
             if (ARate > BRate) return -1;
             if (BRate < ARate) return 1;
         }
@@ -123,7 +123,7 @@ class MCTSAIPlayer_StatusNode{
         let AValue = a.GetRate() + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(a.ControlPlayer.StatusRoot.Total) / a.Total )
         let BValue = b.GetRate() + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(b.ControlPlayer.StatusRoot.Total) / b.Total )
 
-        if (Math.abs(AValue - BValue)>=1e-6) {
+        if (Math.abs(AValue - BValue)>=1e-8) {
             if (AValue > BValue) return -1;
             if (AValue < BValue) return 1;
         }
@@ -155,7 +155,8 @@ class MCTSAIPlayer_StatusNode{
             if ( (Simulation.GameStatus==0) || (Simulation.GameStatus==1) ) {
                 /// 游戏未结束
                 this.Evaluation = Simulation.Players[this.Identity].Evaluation(Simulation);
-                this.Win = this.Evaluation / 400 + 0.5;
+                //this.Win = this.Evaluation / 2216 + 0.5;
+                this.Win = 1 / (1 + Math.exp(-this.Evaluation / 100) );
                 if (this.Win < 0) this.Win = 0;
                 if (this.Win > 1) this.Win = 1;
                 
