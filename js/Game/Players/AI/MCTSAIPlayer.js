@@ -60,7 +60,7 @@ class MCTSAIPlayer extends AIPlayer{
                 NextPosition = this.MCTSSearch();
             } 
 
-            console.log(NextPosition);
+            console.log(this.StatusRoot.Total, NextPosition);
 
             if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
     
@@ -204,26 +204,23 @@ class MCTSAIPlayer extends AIPlayer{
         } else {
 
             NowStatus.ChildrenSort();
-
-            let R = 0;
-            while (R < NowStatus.Children.length) {
-                let L = R;
-                R = Math.min(R+5,NowStatus.Children.length);
-
-                let Flag = false;
-                for (let i = L; i < R; i++) {
-                    let Next = NowStatus.Children[i];
-                    if (this.ExpendSearchMain(Next,Depth+1) == 1) {
-                        Flag = true;
+            let TargetCount = Math.max(Math.ceil( NowStatus.Children.length) / 4, 1);
+            let Count = 0;
+            
+            for (let Next of NowStatus.Children) {
+                if (this.ExpendSearchMain(Next,Depth+1) == 1) {
+                    if (++Count >= TargetCount){
+                        break;
                     }
                 }
-                if (Flag) {
-                    NowStatus.Update();
-                    return 1;
-                }
-
             }
-
+            
+            if (Count != 0) {
+                NowStatus.Update();
+                return 1;
+            } else {
+                return 0;
+            }
 
         }
         return 0;

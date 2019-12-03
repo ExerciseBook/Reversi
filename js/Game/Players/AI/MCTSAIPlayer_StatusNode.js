@@ -131,9 +131,6 @@ class MCTSAIPlayer_StatusNode{
         if (a.Evaluation > b.Evaluation) return -1;
         if (a.Evaluation < b.Evaluation) return 1;
 
-        if (a.Total > b.Total) return -1;
-        if (a.Total < b.Total) return 1;
-
         return Math.random()>.5 ? -1 : 1;
     }
 
@@ -148,8 +145,9 @@ class MCTSAIPlayer_StatusNode{
 
             for (let i of this.Children) {
                 this.Total+= i.Total;
-                this.Win+= i.Win;
             }
+
+            this.Win = this.Children[this.Children.length-1].Win/this.Children[this.Children.length-1].Total * this.Total;
 
         } else {
             this.Total=1;
