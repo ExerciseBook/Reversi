@@ -455,6 +455,25 @@ class Core{
         return RenderingCheckerBoard;
     }
     
+    GetBitCheckerBoard(Player){
+        let BitCheckerBoard = 0n;
+
+        let i;
+        let j;
+        for (i=0;i<8;i++) {
+            for (j=0;j<8;j++){
+                if (this.CheckerBoard[i][j]==Player) {
+                    BitCheckerBoard = BitCheckerBoard << 1n | 1n;
+                } else {
+                    BitCheckerBoard = BitCheckerBoard << 1n;
+                }
+            }
+        }
+
+        return BitCheckerBoard;
+    }
+
+
     async Event_BroadCast_GameStart(){
         let AGameStartEvent0 = new GameStartEvent();
         AGameStartEvent0.GameControl = this;

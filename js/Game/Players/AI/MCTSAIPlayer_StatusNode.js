@@ -156,7 +156,7 @@ class MCTSAIPlayer_StatusNode{
                 /// 游戏未结束
                 this.Evaluation = Simulation.Players[this.Identity].Evaluation(Simulation);
                 //this.Win = this.Evaluation / 2216 + 0.5;
-                this.Win = 1 / (1 + Math.exp(-this.Evaluation / 100) );
+                this.Win = 1 / (1 + Math.exp(-this.Evaluation / 150) );
                 if (this.Win < 0) this.Win = 0;
                 if (this.Win > 1) this.Win = 1;
                 

@@ -168,7 +168,7 @@ class MCTSAIPlayer extends AIPlayer{
      * @return {*} 1 扩展成功 | 0 扩展失败
      */
     ExpendSearchMain(NowStatus, Depth){
-        if (Depth > this.Max_Depth) return 0;
+        //if (Depth > this.Max_Depth) return 0;
 
         if (NowStatus.Children.length == 0) {
             /// NowStatus 为叶子结点
