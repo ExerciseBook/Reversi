@@ -60,12 +60,19 @@ class MCTSAIPlayer extends AIPlayer{
                 NextPosition = this.MCTSSearch();
             } 
 
-            console.log(this.StatusRoot.Total, NextPosition);
+            let P=[];
+            for (let i of this.StatusRoot.Children) {
+                P.push({P:i.GetRate(),M:i.Move,W:i.Total})
+            }
+
+            console.log(this.StatusRoot.Total, NextPosition, P);
 
             if (NextPosition != null) this.PlaceChess(NextPosition.X, NextPosition.Y);
     
         } else {
             //没有轮到我下棋
+            
+            console.log(this.StatusRoot.Total);
         }
     }
     
@@ -203,7 +210,7 @@ class MCTSAIPlayer extends AIPlayer{
             }
         } else {
 
-            NowStatus.ChildrenSort();
+            NowStatus.ChildrenSortWithUCT();
             let TargetCount = Math.max(Math.ceil( NowStatus.Children.length) / 4, 1);
             let Count = 0;
             

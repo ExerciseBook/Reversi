@@ -6,7 +6,7 @@ class MinimaxAIPlayer extends AIPlayer{
     /**
      * 决策树迭代深度
      */
-    Max_Depth = 4;
+    Max_Depth = 2;
 
     /**
      * 构造函数
