@@ -48,15 +48,15 @@ class MCTSAIPlayer extends AIPlayer{
      * @param {Event} e 
      */
     Event_Round(e){
-        this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
+        this.StatusUpdate( this.CloneTheGameControl(e.GameControl), e.LastOperator==null?-1:e.LastOperator.Identity );
 
-        console.log(this.StatusRoot.GetRate());
+        console.log(this.StatusRoot.Win/this.StatusRoot.Total);
 
         if (e.Operator==this) {
             //轮到我下棋
             let NextPosition = this.MCTSSearch();
             while (isNaN(NextPosition.X)){
-                this.StatusUpdate( this.CloneTheGameControl(e.GameControl) );
+                this.StatusUpdate( this.CloneTheGameControl(e.GameControl), e.LastOperator==null?-1:e.LastOperator.Identity );
                 NextPosition = this.MCTSSearch();
             } 
 
@@ -84,11 +84,11 @@ class MCTSAIPlayer extends AIPlayer{
     /**
      * 更新当前状态树根节点
      */
-    StatusUpdate(Simulation){
+    StatusUpdate(Simulation, ThisMove){
 
         // 让俺现在这个棋盘走到的是哪一个状态
         if ((this.StatusRoot == undefined) || (this.StatusRoot == null)) {
-            this.StatusRoot = new MCTSAIPlayer_StatusNode( this.CloneTheGameControl(Simulation), this );
+            this.StatusRoot = new MCTSAIPlayer_StatusNode( this.CloneTheGameControl(Simulation), this, ThisMove );
         }
 
         let NowStatus = null;
@@ -100,7 +100,7 @@ class MCTSAIPlayer extends AIPlayer{
         }
 
         if (NowStatus == null) {
-            this.StatusRoot = new MCTSAIPlayer_StatusNode( this.CloneTheGameControl(Simulation), this );
+            this.StatusRoot = new MCTSAIPlayer_StatusNode( this.CloneTheGameControl(Simulation), this, ThisMove );
         } else {
             this.StatusRoot = NowStatus;
         }
@@ -143,7 +143,7 @@ class MCTSAIPlayer extends AIPlayer{
             //if (((i.Status.GameStatus==1) && (this.Identity==0)) || ((i.Status.GameStatus==0) && (this.Identity==1))) {
                 NextPosition.X = i.Move.X;
                 NextPosition.Y = i.Move.Y;
-                NextPosition.Value = i.GetRate();
+                NextPosition.Value = i.Win/i.Total;
                 break;
             //}
         }
@@ -185,7 +185,7 @@ class MCTSAIPlayer extends AIPlayer{
                     NewSimulation.Players[NewSimulation.GameStatus].PlaceChess(APossiavleMove.X,APossiavleMove.Y);
 
                     /// 将新的游戏状态绑定到本结点下
-                    let NewChildren = new MCTSAIPlayer_StatusNode(NewSimulation, this);
+                    let NewChildren = new MCTSAIPlayer_StatusNode(NewSimulation, this, NowSimulation.Players[NowSimulation.GameStatus].Identity);
                     NewChildren.Move={X:APossiavleMove.X, Y:APossiavleMove.Y};
                     NowStatus.Children.push(NewChildren);
                     //console.log(NewChildren);

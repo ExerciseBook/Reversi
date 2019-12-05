@@ -107,7 +107,7 @@ class Core{
         this._Mutex = false;
 
         // 广播游戏回合事件
-        this.Event_BroadCast_Round();
+        this.Event_BroadCast_Round(null,NaN,NaN);
     }
     
     /**
@@ -384,7 +384,7 @@ class Core{
             if ( (this.GameStatus==0) || (this.GameStatus==1) ) {
                 // 游戏尚未结束
                 // 广播游戏回合事件
-                this.Event_BroadCast_Round();
+                this.Event_BroadCast_Round(APlayer,x,y);
             } else if ( (this.GameStatus==8) || (this.GameStatus==9) || (this.GameStatus==10) ) {
                 // 游戏结束
                 // 广播游戏结束事件
@@ -488,7 +488,7 @@ class Core{
         Event_BroadCast_GameStart_Active(this.Players[1],AGameStartEvent2);
     }
 
-    async Event_BroadCast_Round(){
+    async Event_BroadCast_Round(APlayer,x,y){
         let AGameRoundEvent = new GameRoundEvent();
         AGameRoundEvent.GameControl = this;
         if (this.GameStatus==0){
@@ -496,10 +496,16 @@ class Core{
         } else if (this.GameStatus==1) {
             AGameRoundEvent.Operator = this.Players[1];
         } else AGameRoundEvent.Operator = null;
+        AGameRoundEvent.LastOperator = APlayer;
+        AGameRoundEvent.LastMove.X = x;
+        AGameRoundEvent.LastMove.Y = y;
 
         let AnotherGameRoundEvent0 = new GameRoundEvent();
         AnotherGameRoundEvent0.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent0.Operator = AGameRoundEvent.Operator;
+        AnotherGameRoundEvent0.LastOperator = AGameRoundEvent.LastOperator;
+        AnotherGameRoundEvent0.LastMove.X = AGameRoundEvent.LastMove.X;
+        AnotherGameRoundEvent0.LastMove.Y = AGameRoundEvent.LastMove.Y;
         setTimeout(() => {
             Event_BroadCast_Round_Active(this.DisplayControl,AnotherGameRoundEvent0);
         }, 50); 
@@ -507,6 +513,9 @@ class Core{
         let AnotherGameRoundEvent1 = new GameRoundEvent();
         AnotherGameRoundEvent1.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent1.Operator = AGameRoundEvent.Operator;
+        AnotherGameRoundEvent1.LastOperator = AGameRoundEvent.LastOperator;
+        AnotherGameRoundEvent1.LastMove.X = AGameRoundEvent.LastMove.X;
+        AnotherGameRoundEvent1.LastMove.Y = AGameRoundEvent.LastMove.Y;
         setTimeout(() => {
             Event_BroadCast_Round_Active(this.Players[0],AnotherGameRoundEvent1);
         }, 100)
@@ -515,6 +524,9 @@ class Core{
         let AnotherGameRoundEvent2 = new GameRoundEvent();
         AnotherGameRoundEvent2.GameControl = AGameRoundEvent.GameControl;
         AnotherGameRoundEvent2.Operator = AGameRoundEvent.Operator;
+        AnotherGameRoundEvent2.LastOperator = AGameRoundEvent.LastOperator;
+        AnotherGameRoundEvent2.LastMove.X = AGameRoundEvent.LastMove.X;
+        AnotherGameRoundEvent2.LastMove.Y = AGameRoundEvent.LastMove.Y;
         setTimeout(() => {
             Event_BroadCast_Round_Active(this.Players[1],AnotherGameRoundEvent2);
         }, 150)

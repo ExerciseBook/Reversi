@@ -34,6 +34,11 @@ class MCTSAIPlayer_StatusNode{
     Identity = -1;
 
     /**
+     * 由哪个玩家使得游戏进入本状态
+     */
+    ThisMove = -1;
+
+    /**
      * 玩家实例
      */
     ControlPlayer = null;
@@ -46,10 +51,11 @@ class MCTSAIPlayer_StatusNode{
     /**
      * 普通的构造函数
      */
-    constructor(Status,ControlPlayer){
+    constructor(Status,ControlPlayer,ThisMove){
         this.Status = Status;
         this.Identity = ControlPlayer.Identity;
         this.ControlPlayer = ControlPlayer;
+        this.ThisMove = ThisMove;
     }
 
     /**
@@ -59,17 +65,13 @@ class MCTSAIPlayer_StatusNode{
         let Value = 0;
 
         if (this.Total == 0) return 0.5;
-        if (
-            ( this.Status.GameStatus==0   && this.Identity==1 ) || // 游戏还未结束，下一个回合是对手 | 本结点状态是自己的状态
-            ( this.Status.GameStatus==1   && this.Identity==0 )
-        ) {
+        if ( ( this.ControlPlayer.Identity==this.ThisMove ) ) {
+            /// 由自己进入本状态
             Value = this.Win / this.Total;
-        } else if (
-            ( this.Status.GameStatus==0   && this.Identity==0 ) || // 游戏未结束，下一个回合是自己 | 本结点状态是对手的状态
-            ( this.Status.GameStatus==1   && this.Identity==1 )
-        ) {
+        } else /*if ( this.ControlPlayer.Identity!=this.ThisMove )*/ {
+            /// 不是由自己进入本状态
             Value = 1-(this.Win / this.Total);
-        } else Value = this.Win / this.Total;
+        };
         
         //return 1 / (1 + Math.exp(-Value / 50));
 
@@ -102,8 +104,8 @@ class MCTSAIPlayer_StatusNode{
         let BRate = b.GetRate();
 
         if (Math.abs(ARate - BRate)>=1e-8) {
-            if (ARate > BRate) return -1;
-            if (BRate < ARate) return 1;
+            if (ARate > BRate) return 1;
+            if (BRate < ARate) return -1;
         }
 
         if (a.Evaluation > b.Evaluation) return -1;
@@ -120,12 +122,12 @@ class MCTSAIPlayer_StatusNode{
     }
 
     ChildrenWithUCTComparator(a,b){
-        let AValue = a.GetRate() + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(a.ControlPlayer.StatusRoot.Total) / a.Total )
-        let BValue = b.GetRate() + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(b.ControlPlayer.StatusRoot.Total) / b.Total )
+        let AValue = a.Win/a.Total + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(a.ControlPlayer.StatusRoot.Total) / a.Total )
+        let BValue = b.Win/b.Total + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(b.ControlPlayer.StatusRoot.Total) / b.Total )
 
         if (Math.abs(AValue - BValue)>=1e-8) {
-            if (AValue > BValue) return -1;
-            if (AValue < BValue) return 1;
+            if (AValue > BValue) return 1;
+            if (AValue < BValue) return -1;
         }
 
         if (a.Evaluation > b.Evaluation) return -1;
@@ -143,8 +145,11 @@ class MCTSAIPlayer_StatusNode{
 
         if (this.Children.length>0) {
 
+            this.ChildrenSort();
+
             for (let i of this.Children) {
                 this.Total+= i.Total;
+                //this.Win+= i.Win;
             }
 
             this.Win = this.Children[this.Children.length-1].Win/this.Children[this.Children.length-1].Total * this.Total;
