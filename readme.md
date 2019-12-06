@@ -27,3 +27,8 @@
 
 ## 鸣谢
 - [Chlorie](https://github.com/Chlorie) 的绝赞估值函数（
+
+## 参考文献
+- Monte Carlo tree search - Wikipedia: <https://en.wikipedia.org/wiki/Monte_Carlo_tree_search>
+- 黄海同.黑白棋AI设计探究[J].电脑知识与技术,2016,12(29):198-200.
+- 宋向飞,米思琦.基于python的棋类教学系统设计实现[J].科技视界,2018(30):194-196.
