@@ -23,3 +23,7 @@
 - Vue.js - v2.6.10 : <https://github.com/vuejs/vue>
 - pixi.js - v4.8.8 : <https://pixijs.com>
 - Iconfont : <https://www.iconfont.cn/>
+- Live2D : <https://www.live2d.com/>
+
+## 鸣谢
+- [Chlorie](https://github.com/Chlorie) 的绝赞估值函数（
