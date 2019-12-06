@@ -237,6 +237,6 @@ html, body{
 .live2d{
     position: absolute;
     transform: scale(0.5);
-    top: -240px;
-    right: -150px;
+    top: -340px;
+    right: -370px;
 }

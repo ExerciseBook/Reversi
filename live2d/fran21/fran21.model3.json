@@ -5,7 +5,17 @@
 		"Textures": [
 			"fran21.2048/texture_00.png"
 		],
-		"Physics": "fran21.physics3.json"
+        "Physics": "fran21.physics3.json",
+        "Motions": {
+			"": [
+				{
+					"File": "idel.motion3.json"
+                },
+                {
+					"File": "touch.motion3.json"
+				}
+			]
+		}
 	},
 	"Groups": [
 		{

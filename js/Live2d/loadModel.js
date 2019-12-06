@@ -14,11 +14,11 @@ var loginIndex;
 //回港动作，只针对碧蓝航线等有回港动作，动作文件中有home字段
 var homeIndex;
 //模型偏移位置
-var model_x = -15;
+var model_x = 50;
 var model_y = 40;
 //渲染模型的宽高
-var modelWidth = 500;
-var modelHight = 500;
+var modelWidth = 1000;
+var modelHight = 700;
 //渲染模型的比例
 var scale = 500;
 //测试用，加载时间起点，不保证准确性
@@ -282,6 +282,14 @@ function loadCompleteHandler(){
 }
 //简单发送AJAX异步请求读取json文件
 function loadModel(modelName){
+    if(modelName == 'fran21'){
+        //模型偏移位置
+        model_x = 100;
+        model_y = -30;
+    }else{
+        model_x = 50;
+        model_y = 40;
+    }
     //拼接路径
     //如果model3的文件形如baseModelPath/xxx/xxx.model3.json则下面不用修改，否则按照文件路径进行修改
     modelPath =  baseModelPath + modelName + "/" + modelName + ".model3.json";
