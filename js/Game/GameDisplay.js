@@ -85,8 +85,10 @@ class GameDisplay extends Display{
 
         if (e.Winner == e.GameControl.Players[1]) {
             game.info_talk = "你输🌶！！！";
-        } else {
+        } else if (e.Winner == e.GameControl.Players[0]) {
             game.info_talk = "我输了。";
+        } else {
+            game.info_talk = "🤔";
         }
         //console.log(e);
     }
