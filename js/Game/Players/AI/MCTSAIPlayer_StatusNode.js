@@ -122,8 +122,8 @@ class MCTSAIPlayer_StatusNode{
     }
 
     ChildrenWithUCTComparator(a,b){
-        let AValue = a.Win/a.Total + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(a.ControlPlayer.StatusRoot.Total) / a.Total )
-        let BValue = b.Win/b.Total + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(b.ControlPlayer.StatusRoot.Total) / b.Total )
+        let AValue = a.GetRate(); + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(a.ControlPlayer.StatusRoot.Total) / a.Total )
+        let BValue = b.GetRate() + 1.4142135623730950488016887242097 * Math.sqrt( Math.log2(b.ControlPlayer.StatusRoot.Total) / b.Total )
 
         if (Math.abs(AValue - BValue)>=1e-8) {
             if (AValue > BValue) return -1;
