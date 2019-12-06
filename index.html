@@ -76,6 +76,7 @@
 								<use xlink:href="#icon-title-btn"></use>
 							</svg>
 						</a>
+						<a></a>
 						<a @click="close_pop">
 							<span>取消</span>
 							<svg class="icon" aria-hidden="true">
@@ -85,8 +86,11 @@
 					</div>
 					<div v-if="pop_type == 'about'" class="about title-btns">
 						<div class="game-about">
-							<p>算法：Eric</p>
-							<p>设计：陆陆侠</p>
+							<p>算法: Eric</p>
+							<p>设计: 陆陆侠</p>
+						</div>
+						<div>
+							<a href="https://github.com/ExerciseBook/Reversi">项目仓库地址</a>
 						</div>
 						<a @click="close_pop">
 							<span>返回</span>
