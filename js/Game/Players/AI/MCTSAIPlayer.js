@@ -62,7 +62,7 @@ class MCTSAIPlayer extends AIPlayer{
 
             let P=[];
             for (let i of this.StatusRoot.Children) {
-                P.push({P:i.GetRate(),M:i.Move,W:i.Total})
+                P.push({P:i.GetRate(), M:i.Move, W:i.Total})
             }
 
             console.log(this.StatusRoot.Total, NextPosition, P);

@@ -105,7 +105,7 @@ class MCTSAIPlayer_StatusNode{
 
         if (Math.abs(ARate - BRate)>=1e-8) {
             if (ARate > BRate) return -1;
-            if (BRate < ARate) return 1;
+            if (ARate < BRate) return 1;
         }
 
         if (a.Evaluation > b.Evaluation) return -1;
@@ -149,10 +149,10 @@ class MCTSAIPlayer_StatusNode{
 
             for (let i of this.Children) {
                 this.Total+= i.Total;
-                this.Win+= i.Win;
+                //this.Win+= i.Win;
             }
 
-            //this.Win = this.Children[0].Win/this.Children[0].Total * this.Total;
+            this.Win = this.Children[0].Win/this.Children[0].Total * this.Total;
 
         } else {
             this.Total=1;
