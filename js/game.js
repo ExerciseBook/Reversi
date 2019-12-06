@@ -74,6 +74,7 @@ var game = new Vue({
 
 				PlayerA = new HumanPlayer();
 				PlayerB = new AIPlayer_Fran();
+				PlayerB.SearchTimeLimitation = 10*1000;
 				ADisplay = new GameDisplay();
 
 				GameControl.Initialize(PlayerA,PlayerB,ADisplay);

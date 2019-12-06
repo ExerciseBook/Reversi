@@ -9,11 +9,6 @@ class MCTSAIPlayer extends AIPlayer{
     SearchTimeLimitation = 20 * 1000;
 
     /**
-     * 最大迭代深度
-     */
-    Max_Depth = 6;
-
-    /**
      * 构造函数
      */
     constructor(){
@@ -175,8 +170,7 @@ class MCTSAIPlayer extends AIPlayer{
      * @return {*} 1 扩展成功 | 0 扩展失败
      */
     ExpendSearchMain(NowStatus, Depth){
-        //if (Depth > this.Max_Depth) return 0;
-
+        
         if (NowStatus.Children.length == 0) {
             /// NowStatus 为叶子结点
             ///  1. 待扩展 | 返回扩展成功 
