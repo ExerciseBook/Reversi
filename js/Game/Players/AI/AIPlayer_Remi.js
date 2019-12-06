@@ -1,5 +1,5 @@
 /**
- * 蕾米莉亚 AI
+ * 芙兰朵露 AI
  */
 class AIPlayer_Remi extends MinimaxAIPlayer{
     /**

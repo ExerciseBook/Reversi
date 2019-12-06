@@ -28,23 +28,10 @@ class GameDisplay extends Display{
 				}
 			}
 		}
-		//for(i=0; i<8; i++){
-		//	for(j=0; j<8; j++){
-		//		if(e.OldCheckerBoard[i][j] == e.Players[0]){
-		//			OldCheckerBoard[i][j] = 0;
-		//		}else if(e.OldCheckerBoard[i][j] == e.Players[1]){
-		//			OldCheckerBoard[i][j] = 1;
-		//		}
-		//	}
-        //}
+
         game.game_score = e.Scores;
         game.checkerboard = NewCheckerBoard;
         
-        //game.info_talk = "少女祈祷中……"
-		//setTimeout(()=>{
-        //    //game.checkerboard = NewCheckerBoard;
-        //    game.info_talk = ""
-		//},2000)
     }
 
     /**
@@ -57,10 +44,13 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_GameStart(e){
-        game.info_talk = "又来了不知天高地厚的家伙么"
         setTimeout(()=>{
-            game.info_talk = ""
-        },2000)
+            game.info_talk = "又来了不知天高地厚的家伙么"
+            setTimeout(()=>{
+                game.info_talk = ""
+                
+            },2000)
+        },100)
         //console.log(e);
     }
 

@@ -1,5 +1,5 @@
 /**
- * 游戏主渲染模块
+ * 虚拟渲染模块
  */
 class VirtualDisplay extends Display{
 

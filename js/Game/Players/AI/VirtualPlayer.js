@@ -1,5 +1,5 @@
 /**
- * 人类玩家类
+ * 虚拟玩家类
  */
 class VirtualPlayer extends AIPlayer{
 
