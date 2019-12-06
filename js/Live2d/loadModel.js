@@ -2,7 +2,6 @@ var LIVE2DCUBISMCORE = Live2DCubismCore
 //如果资源在CDN，一定要写http://或者https://否则会以本域名请求且为相对路径
 //模型的model3.json文件路径
 var baseModelPath = window.location.href + "/live2d/";
-var modelNames = ["remi1"];
 var modelPath;
 //Application全局变量
 var app = null;
@@ -282,9 +281,7 @@ function loadCompleteHandler(){
     PIXI.loader.off("complete", loadCompleteHandler);//监听事件在加载完毕后取消
 }
 //简单发送AJAX异步请求读取json文件
-function loadModel(){
-    //随机模型，如果想指定模型可以将随机值改为指定参数，或直接传指定模型名
-    var modelName =  modelNames[Math.floor(Math.random() * modelNames.length )];
+function loadModel(modelName){
     //拼接路径
     //如果model3的文件形如baseModelPath/xxx/xxx.model3.json则下面不用修改，否则按照文件路径进行修改
     modelPath =  baseModelPath + modelName + "/" + modelName + ".model3.json";

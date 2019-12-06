@@ -1,14 +1,14 @@
 /**
  * 蕾米莉亚 AI
  */
-class AIPlayer_Remi extends MinimaxAIPlayer{
+class AIPlayer_Fran extends MCTSAIPlayer{
     /**
      * 构造函数
      */
     constructor(){
         super();
         
-        loadModel('remi1');
+        loadModel('fran21');
     }
 
 

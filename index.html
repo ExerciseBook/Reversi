@@ -30,6 +30,7 @@
 	<script src="js/Game/Players/AI/MCTSAIPlayer_StatusNode.js"></script>
 	<script src="js/Game/Players/AI/MCTSAIPlayer.js"></script>
 	<script src="js/Game/Players/AI/AIPlayer_Remi.js"></script>
+	<script src="js/Game/Players/AI/AIPlayer_Fran.js"></script>
     
     <script src="js/Live2d/pixi/pixi.min.js"></script>
     <script src="js/Live2d/core/live2dcubismcore.min.js"></script>
@@ -63,14 +64,14 @@
 				<div v-if="show_pop" class="pop-content">
 					<p class="pop-title">{{pop_title}}</p>
 					<div v-if="pop_type == 'choose_level'" class="title-btns">
-						<a @click="start_level('easy')">
-							<span>新手</span>
+						<a @click="start_level('level0')">
+							<span>蕾米莉亚 · 斯卡雷特</span>
 							<svg class="icon" aria-hidden="true">
 								<use xlink:href="#icon-title-btn"></use>
 							</svg>
 						</a>
-						<a @click="start_level('hard')">
-							<span>入门</span>
+						<a @click="start_level('level1')">
+							<span>芙兰朵露 · 斯卡雷特</span>
 							<svg class="icon" aria-hidden="true">
 								<use xlink:href="#icon-title-btn"></use>
 							</svg>
@@ -101,7 +102,7 @@
 								<use xlink:href="#icon-title-btn"></use>
 							</svg>
 						</a>
-						<a>
+						<a @click="game_restart">
 							<span>重新开始</span>
 							<svg class="icon" aria-hidden="true">
 								<use xlink:href="#icon-title-btn"></use>
@@ -172,11 +173,6 @@
 			</div>
 			<div class="game-menzu">
 				<div class="menu-btn">
-					<a>
-						<svg class="icon" aria-hidden="true">
-							<use xlink:href="#icon-back"></use>
-						</svg>
-					</a>
 					<a @click="menu">
 						<svg class="icon" aria-hidden="true">
 							<use xlink:href="#icon-menu"></use>

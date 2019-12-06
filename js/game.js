@@ -53,15 +53,33 @@ var game = new Vue({
 			this.show_pop = 0
 		},
 		start_level: function(level){
-            loadModel();
-			this.show_pop = 0
-			this.show_title = 0
-			this.show_game = 1
-			GameControl = new Core()
-			PlayerA = new HumanPlayer()
-			PlayerB = new AIPlayer_Remi()
-			ADisplay = new GameDisplay()
-			GameControl.Initialize(PlayerA,PlayerB,ADisplay)
+			console.log(level);
+
+			this.now_level = level;
+
+			this.show_pop = 0;
+			this.show_title = 0;
+			this.show_game = 1;
+
+			if (level=='level0') {
+				GameControl = new Core();
+
+				PlayerA = new HumanPlayer();
+				PlayerB = new AIPlayer_Remi();
+				ADisplay = new GameDisplay();
+
+				GameControl.Initialize(PlayerA,PlayerB,ADisplay);
+			} else if (level=='level1') {
+				GameControl = new Core();
+
+				PlayerA = new HumanPlayer();
+				PlayerB = new AIPlayer_Fran();
+				ADisplay = new GameDisplay();
+
+				GameControl.Initialize(PlayerA,PlayerB,ADisplay);
+			}
+
+
 		},
 		place_chess: function(x, y){
 			/*
@@ -69,9 +87,12 @@ var game = new Vue({
 			this.game_player ? this.$set(this.checkerboard[x], y, 2) : this.$set(this.checkerboard[x], y, 1),
 			this.game_player = !this.game_player
 			*/
-			APlayer = GameControl.Players[0]
-			APlayer.PlaceChess(x, y)
-        },
+			APlayer = GameControl.Players[0];
+			APlayer.PlaceChess(x, y);
+		},
+		game_restart: function(){
+			this.start_level(this.now_level);
+		},
 	},
 	created: function(){
 		
