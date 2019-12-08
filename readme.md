@@ -5,6 +5,10 @@
 - 一个普通的小游戏
 - 一个普通的新人作
 
+## 测试运行环境
+- Google Chrome Version 78.0.3904.108 (Official Build)
+- JavaScript ES 10
+
 ## 搬砖者
 
 ### 代码
