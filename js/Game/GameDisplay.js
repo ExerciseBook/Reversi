@@ -64,7 +64,7 @@ class GameDisplay extends Display{
      * @param {Event} e 
      */
     Event_Round(e){
-        game.game_round ++;
+        game.game_round = e.GameRound;
         if (e.Operator == e.GameControl.Players[1]) {
             game.info_talk = "少女祈祷中……";
         } else {

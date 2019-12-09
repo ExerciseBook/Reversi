@@ -12,4 +12,9 @@ class Event{
      */
     constructor(){
     }
+
+    /**
+     * 游戏回合
+     */
+    GameRound;
 }

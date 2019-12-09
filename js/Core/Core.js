@@ -43,9 +43,12 @@ class Core{
     _Mutex = false;
 
     /**
+     * 游戏回合
+     */
+    GameRound;
+
+    /**
      * 构造函数
-     * 
-     * 并没啥卵用
      */
     constructor() {
         this._Mutex = false;
@@ -75,6 +78,7 @@ class Core{
         ];
 
         this.GameStatus=0;
+        this.GameRound=1;
 
         this.Players=[PlayerA,PlayerB];
 
@@ -98,6 +102,7 @@ class Core{
         AGameDisplayCheckerUpdatEvent.NewRenderingCheckerBoard = this.GetRenderingCheckerBoard();
         AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
         AGameDisplayCheckerUpdatEvent.Scores = this.GetScores();
+        AGameDisplayCheckerUpdatEvent.GameRound = this.GameRound;
         
         this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
 
@@ -312,12 +317,14 @@ class Core{
         let NextStatus = 1-this.GameStatus;
         if (this.CanPlaceAChess(this.Players[NextStatus])) {
             this.GameStatus = NextStatus;
+            this.GameRound++;
             return this.GameStatus;
         }
 
         NextStatus = this.GameStatus;
         if (this.CanPlaceAChess(this.Players[NextStatus])) {
             this.GameStatus = NextStatus;
+            this.GameRound++;
             return this.GameStatus;
         }
 
@@ -376,6 +383,7 @@ class Core{
             AGameDisplayCheckerUpdatEvent.NewRenderingCheckerBoard = this.GetRenderingCheckerBoard();
             AGameDisplayCheckerUpdatEvent.Players = [this.Players[0], this.Players[1]];
             AGameDisplayCheckerUpdatEvent.Scores = this.GetScores();
+            AGameDisplayCheckerUpdatEvent.GameRound = this.GameRound;
 
             this.DisplayControl.CheckerBoardUpdate(AGameDisplayCheckerUpdatEvent);
 
@@ -477,20 +485,24 @@ class Core{
     async Event_BroadCast_GameStart(){
         let AGameStartEvent0 = new GameStartEvent();
         AGameStartEvent0.GameControl = this;
+        AGameStartEvent0.GameRound = this.GameRound;
         Event_BroadCast_GameStart_Active(this.DisplayControl,AGameStartEvent0);
 
         let AGameStartEvent1 = new GameStartEvent();
         AGameStartEvent1.GameControl = this;
+        AGameStartEvent1.GameRound = this.GameRound;
         Event_BroadCast_GameStart_Active(this.Players[0],AGameStartEvent1);
 
         let AGameStartEvent2 = new GameStartEvent();
         AGameStartEvent2.GameControl = this;
+        AGameStartEvent2.GameRound = this.GameRound;
         Event_BroadCast_GameStart_Active(this.Players[1],AGameStartEvent2);
     }
 
     async Event_BroadCast_Round(APlayer,x,y){
         let AGameRoundEvent = new GameRoundEvent();
         AGameRoundEvent.GameControl = this;
+        AGameRoundEvent.GameRound = this.GameRound;
         if (this.GameStatus==0){
             AGameRoundEvent.Operator = this.Players[0];
         } else if (this.GameStatus==1) {
@@ -502,6 +514,7 @@ class Core{
 
         let AnotherGameRoundEvent0 = new GameRoundEvent();
         AnotherGameRoundEvent0.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent0.GameRound = AGameRoundEvent.GameRound;
         AnotherGameRoundEvent0.Operator = AGameRoundEvent.Operator;
         AnotherGameRoundEvent0.LastOperator = AGameRoundEvent.LastOperator;
         AnotherGameRoundEvent0.LastMove.X = AGameRoundEvent.LastMove.X;
@@ -512,6 +525,7 @@ class Core{
 
         let AnotherGameRoundEvent1 = new GameRoundEvent();
         AnotherGameRoundEvent1.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent1.GameRound = AGameRoundEvent.GameRound;
         AnotherGameRoundEvent1.Operator = AGameRoundEvent.Operator;
         AnotherGameRoundEvent1.LastOperator = AGameRoundEvent.LastOperator;
         AnotherGameRoundEvent1.LastMove.X = AGameRoundEvent.LastMove.X;
@@ -523,6 +537,7 @@ class Core{
 
         let AnotherGameRoundEvent2 = new GameRoundEvent();
         AnotherGameRoundEvent2.GameControl = AGameRoundEvent.GameControl;
+        AnotherGameRoundEvent2.GameRound = AGameRoundEvent.GameRound;
         AnotherGameRoundEvent2.Operator = AGameRoundEvent.Operator;
         AnotherGameRoundEvent2.LastOperator = AGameRoundEvent.LastOperator;
         AnotherGameRoundEvent2.LastMove.X = AGameRoundEvent.LastMove.X;
@@ -535,6 +550,7 @@ class Core{
     async Event_BroadCast_GameEnd(){
         let AGameEndEvent = new GameEndEvent();
         AGameEndEvent.GameControl = this;
+        AGameEndEvent.GameRound = this.GameRound;
         if ( this.GameStatus==8 ) {
             AGameEndEvent.Winner = this;
         } else if ( this.GameStatus==9 ) {
@@ -548,18 +564,21 @@ class Core{
 
         let AnotherEndEvent0 = new GameEndEvent();
         AnotherEndEvent0.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent0.GameRound = AGameEndEvent.GameRound;
         AnotherEndEvent0.Winner = AGameEndEvent.Winner;
         AnotherEndEvent0.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         Event_BroadCast_GameEnd_Active(this.DisplayControl,AnotherEndEvent0);
 
         let AnotherEndEvent1 = new GameEndEvent();
         AnotherEndEvent1.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent1.GameRound = AGameEndEvent.GameRound;
         AnotherEndEvent1.Winner = AGameEndEvent.Winner;
         AnotherEndEvent1.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         Event_BroadCast_GameEnd_Active(this.Players[0],AnotherEndEvent1);
 
         let AnotherEndEvent2 = new GameEndEvent();
         AnotherEndEvent2.GameControl = AGameEndEvent.GameControl;
+        AnotherEndEvent2.GameRound = AGameEndEvent.GameRound;
         AnotherEndEvent2.Winner = AGameEndEvent.Winner;
         AnotherEndEvent2.Scores = [AGameEndEvent.Scores[0],AGameEndEvent.Scores[1]];
         Event_BroadCast_GameEnd_Active(this.Players[1],AnotherEndEvent2);
@@ -573,6 +592,7 @@ class Core{
     Clone(Status){
         let Simulation = new Core();
         Simulation.GameStatus = this.GameStatus;
+        Simulation.GameRound = this.GameRound;
         Simulation.Players = [Status.Players[0], Status.Players[1]];
 
         Simulation.CheckerBoard=[
@@ -612,6 +632,7 @@ class Core{
 
     StatusEquals(Another) {
         if (this.GameStatus != Another.GameStatus) return false;
+        if (this.GameRound != Another.GameRound) return false;
 
         let i;
         let j;
