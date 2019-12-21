@@ -2,9 +2,20 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<title>光与对立的故事</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="apple-touch-icon" href="favicon.ico">
+	<meta name="msapplication-TileImage" content="favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script>
+		window.onload = () => {
+			if ("serviceWorker" in navigator) {
+				navigator.serviceWorker.register("./js/sw.js");
+			}
+		}
+	</script>
 	<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
 	<script src="//at.alicdn.com/t/font_1477749_juuir1t3wx.js" type="text/javascript" charset="utf-8"></script>
 	
