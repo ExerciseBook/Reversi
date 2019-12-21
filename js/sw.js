@@ -1,5 +1,5 @@
 const cacheName = "Reversi";
-const filesToCache = ["/", "/js", "/index.html", "/css", "/img"];
+const filesToCache = ["/Reversi"];
 
 /* Start the service worker and cache all of the app's content */
 self.addEventListener("install", function(e) {
